@@ -17,6 +17,8 @@ namespace E2_CS
 			Board b;
 			Problem p = gen.Gen(4, 4, 4, 0, out b);
 			p.pieces.Shuffle();
+			Random rng = new Random();
+			p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
 			Stopwatch watch = new Stopwatch();
 			BacktrackSolver sol = new BacktrackSolver();
 			List<Board> solutions = new List<Board>();

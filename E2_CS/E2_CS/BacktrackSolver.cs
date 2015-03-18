@@ -37,7 +37,7 @@ namespace E2_CS
 				int r = ord.GetSide(Side.Right, index);
 				int b = ord.GetSide(Side.Bottom, index);
 				int t = ord.GetSide(Side.Top, index);
-				pieceIndex = finder.Acquire(t, r, b, l, pieceIndex);
+				pieceIndex = finder.Acquire(ref t, ref r, ref b, ref l, pieceIndex);
 				if (pieceIndex == -1)
 				{
 					--index;
@@ -46,7 +46,7 @@ namespace E2_CS
 				else
 				{
 					pieceIndices.Push(pieceIndex);
-					ord.Set(index, p.pieces[pieceIndex]);
+					ord.Set(index, new Piece(t, r, b, l));
 					++index;
 					if (index == board.size) {
 						solutions.Add(board);

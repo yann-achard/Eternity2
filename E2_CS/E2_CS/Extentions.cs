@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace E2_CS
 {
+	public delegate void RefAction<T>(ref T arg);
+
 	static class Extentions
 	{
 		public static void Shuffle<T>(this IList<T> list)
@@ -29,6 +31,14 @@ namespace E2_CS
 				tmp = a[idx];
 				a[idx] = a[i];
 				a[i] = tmp;
+			}
+		}
+
+		public static void Each<T>(this T[] a, RefAction<T> action)
+		{
+			for (int i=0; i<a.Length; ++i)
+			{
+				action(ref a[i]);
 			}
 		}
 	}
