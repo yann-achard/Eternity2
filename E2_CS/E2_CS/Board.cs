@@ -51,6 +51,11 @@ namespace E2_CS
 			}
 		}
 
+		public void Shuffle()
+		{
+			pieces.Shuffle();
+		}
+
 		public void Set(int x, int y, Piece p)
 		{
 			pieces[y*wd+x] = p;

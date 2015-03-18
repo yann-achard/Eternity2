@@ -45,6 +45,7 @@
     <Compile Include="BacktrackSolver.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardOrder.cs" />
+    <Compile Include="Extentions.cs" />
     <Compile Include="PieceFinder.cs" />
     <Compile Include="Point2D.cs" />
     <Compile Include="Side.cs" />

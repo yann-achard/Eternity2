@@ -15,8 +15,8 @@ namespace E2_CS
 			ProblemGenerator gen = new ProblemGenerator();
 
 			Board b;
-			Problem p = gen.Gen(7, 7, 4, 0, out b);
-			
+			Problem p = gen.Gen(4, 4, 4, 0, out b);
+			p.pieces.Shuffle();
 			Stopwatch watch = new Stopwatch();
 			BacktrackSolver sol = new BacktrackSolver();
 			List<Board> solutions = new List<Board>();
@@ -26,8 +26,14 @@ namespace E2_CS
 			watch.Stop();
 
 			Console.WriteLine("{0} found {3} in {1} iterations / {2}", sol.Name, iterCount, watch.Elapsed, solutions.Count);
-			if (solutions.Count > 0) solutions[0].CopyToClipboard();
-			else b.CopyToClipboard();
+			if (solutions.Count > 0) {
+				solutions[0].Shuffle();
+				solutions[0].CopyToClipboard();
+			}
+			else {
+				b.Shuffle();
+				b.CopyToClipboard();
+			}
 			Console.ReadKey();
 		}
 	}

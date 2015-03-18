@@ -21,7 +21,7 @@ namespace E2_CS
 			for (int i=firstIdx; i<m_pieces.Length; ++i)
 			{
 				p = m_pieces[i];
-				if (m_used[i] == false && (t == -1 || p.top == t) && (r == -1 || p.right == r) && (b == -1 || p.bottom == b) && (l == -1 || p.left == l))
+				if (m_used[i] == false && ((t == -1 && p.top!=0) || p.top == t) && ((r == -1 && p.right!=0) || p.right == r) && ((b == -1 && p.bottom!=0) || p.bottom == b) && ((l == -1 && p.left!=0) || p.left == l))
 				{
 					m_used[i] = true;
 					return i;
