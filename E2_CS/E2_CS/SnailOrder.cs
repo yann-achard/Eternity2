@@ -69,6 +69,11 @@ namespace E2_CS
 			board.Set(at[idx], p);
 		}
 		
+		public void Set(int idx, int t, int r, int b, int l)
+		{
+			board.Set(at[idx], t, r, b, l);
+		}
+		
 		public int GetSide(Side side, int idx)
 		{
 			return board.GetSide(side, at[idx]);

@@ -51,9 +51,9 @@ namespace E2_CS
 			}
 		}
 
-		public void Shuffle()
+		public void Shuffle(Random rng)
 		{
-			pieces.Shuffle();
+			pieces.Shuffle(rng);
 		}
 
 		public void Set(int x, int y, Piece p)
@@ -64,6 +64,11 @@ namespace E2_CS
 		public void Set(int idx, Piece p)
 		{
 			pieces[idx] = p;
+		}
+
+		public void Set(int idx, int t, int r, int b, int l)
+		{
+			pieces[idx].Set(t, r, b, l);
 		}
 
 		public Piece Get(int x, int y)
@@ -111,5 +116,17 @@ namespace E2_CS
 		public int wd, ht, size;
 		private Piece[] pieces;
 		private Point2D[] lookup;
+	}
+
+	struct BoardSolution
+	{
+		public BoardSolution(Board b, float iteration)
+		{
+			board = b;
+			foundOnIteration = iteration;
+		}
+
+		public Board board;
+		public float foundOnIteration;
 	}
 }

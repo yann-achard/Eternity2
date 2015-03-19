@@ -19,6 +19,14 @@ namespace E2_CS
 			left = l;
 		}
 
+		public void Set(int t, int r, int b, int l)
+		{
+			top = t;
+			right = r;
+			bottom = b;
+			left = l;
+		}
+
 		public Piece Spined(int nb)
 		{
 			int[] tmp = {top, right, bottom, left};

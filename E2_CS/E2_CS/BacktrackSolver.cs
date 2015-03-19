@@ -13,13 +13,14 @@ namespace E2_CS
 			get { return "BacktrackSolver"; }
 		}
 
-		public uint Solve(Problem p, List<Board> solutions, bool findAll = false)
+		public float Solve(Problem p, List<BoardSolution> solutions, bool findAll = false)
 		{
-			uint iterCount = 0;
+			float iterCount = 0;
 			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
 			Board board = new Board(p.wd, p.ht);
 			SnailOrder ord = new SnailOrder(board);
 			Piece resetPiece = new Piece(-1, -1, -1, -1);
+			Piece   setPiece = new Piece();
 			Stack<int> pieceIndices = new Stack<int>();
 			int index = 0;
 			do {
@@ -46,10 +47,11 @@ namespace E2_CS
 				else
 				{
 					pieceIndices.Push(pieceIndex);
-					ord.Set(index, new Piece(t, r, b, l));
+					setPiece.Set(t, r, b, l);
+					ord.Set(index, setPiece);
 					++index;
 					if (index == board.size) {
-						solutions.Add(board);
+						solutions.Add(new BoardSolution(board, iterCount));
 						if (findAll) {
 							--index;
 						}

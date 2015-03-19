@@ -10,9 +10,8 @@ namespace E2_CS
 
 	static class Extentions
 	{
-		public static void Shuffle<T>(this IList<T> list)
+		public static void Shuffle<T>(this IList<T> list, Random rng)
 		{
-			Random rng = new Random();
 			T tmp;
 			for (int i=2; i<list.Count; ++i) {
 				int idx = rng.Next(i);
@@ -22,9 +21,8 @@ namespace E2_CS
 			}
 		}
 
-		public static void Shuffle<T>(this T[] a)
+		public static void Shuffle<T>(this T[] a, Random rng)
 		{
-			Random rng = new Random();
 			T tmp;
 			for (int i=2; i<a.Length; ++i) {
 				int idx = rng.Next(i);
