@@ -13,18 +13,22 @@ namespace E2_CS
 		[STAThread]
 		static void Main(string[] args)
 		{
-			int seed = 0;
+			int seed = 3;
 			Random rng = new Random(seed);
 			float stabilityGoal = 1000.01f;
 			uint stableInARow = 1;
 			StatStabilizer stabilizer = new StatStabilizer(stabilityGoal, stableInARow);
 			string filename = @"../../../../Timing2.txt";
 			File.WriteAllText(filename, "Measuing avg nb of iterations to first solution using snail backtracker\n");
-			File.AppendAllText(filename, "size\tnbCols\tavg\tsdev\truns\tseconds\n");
+			File.AppendAllText(filename, "size\tnbCols\tavg\tsdev\truns\tmiliseconds\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				for (int size = 7; size <= 7; ++size) { 
-					for (int nbCols = 5; nbCols <= 5; ++nbCols) {
+				int size = 7; 
+				//for (int size = 7; size <= 7; ++size)
+                { 
+                    int nbCols = 7;
+					//for (int nbCols = 6; nbCols <= 6; ++nbCols)
+                    {
 						stabilizer.Reset();
 						Stopwatch watch = new Stopwatch();
 						watch.Start();
@@ -36,26 +40,29 @@ namespace E2_CS
 							Problem p = gen.Gen(size, size, nbCols, rng.Next(), out b);
 							//for (;;)
 							{ 
-								p.pieces.Shuffle(rng);
-								p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
+								//p.pieces.Shuffle(rng);
+								//p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
 								BacktrackSolver sol = new BacktrackSolver();
 								List<BoardSolution> solutions = new List<BoardSolution>();
 
 								float iterCount = sol.Solve(p, solutions, false);
 
 								//Console.WriteLine("{0} found {3} in {1} iterations / {2}", sol.Name, iterCount, watch.Elapsed, solutions.Count);
-								//if (solutions.Count > 0) {
+								if (solutions.Count > 0) {
+								    Console.WriteLine("Solution found in {0:0000} iterations", iterCount);
 								//	float min = solutions.Min(s => s.foundOnIteration);
 								//	float avg = solutions.Aggregate<BoardSolution,float>(0, (float v, BoardSolution s) => v + s.foundOnIteration / (float)solutions.Count);
 								//	float max = solutions.Max(s => s.foundOnIteration);
 								//	Console.WriteLine("imin:{0:0.E-00} iavg:{1:0.E-00} imax:{2:0.E-00}", min, avg, max);
 								//	solutions[0].board.Shuffle(new Random());
-								//	solutions[0].board.CopyToClipboard();
-								//}
-								//else {
+									solutions[0].board.CopyToClipboard();
+								}
+								else {
+								    Console.WriteLine("No solution found in {0:0000} iterations", iterCount);
+			                        Console.ReadKey(true);
 								//	b.Shuffle(rng);
-								//	b.CopyToClipboard();
-								//}
+									b.CopyToClipboard();
+								}
 								stabilizer.Feed(iterCount);
 								Console.Write("\b\b\b\b\b{0:0000}", stabilizer.Count);
 								//Console.WriteLine("{0:0.00E-00} \t {1:0.00E-00} \t {2}", stabilizer.Avg, stabilizer.SDev, stabilizer.LastDelta);

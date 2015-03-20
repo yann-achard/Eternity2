@@ -17,6 +17,7 @@ namespace E2_CS
 		{
 			float iterCount = 0;
 			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
+			//PieceFinderOld finder = new PieceFinderOld(p.pieces, p.nbPat);
 			Board board = new Board(p.wd, p.ht);
 			SnailOrder ord = new SnailOrder(board);
 			Piece resetPiece = new Piece(-1, -1, -1, -1);
@@ -32,7 +33,7 @@ namespace E2_CS
 					pieceIndex = pieceIndices.Pop();
 					ord.Set(index, resetPiece);
 					finder.Restore(pieceIndex);
-					++pieceIndex;
+                    //++pieceIndex;
 				}
 				int l = ord.GetSide(Side.Left, index);
 				int r = ord.GetSide(Side.Right, index);
@@ -61,6 +62,7 @@ namespace E2_CS
 						}
 					}
 				}
+				//board.CopyToClipboard();
 			} while (pieceIndices.Count > 0);
 
 

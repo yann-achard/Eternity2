@@ -8,34 +8,34 @@ namespace E2_CS
 {
 	struct Piece
 	{
-		public int top, right, bottom, left;
+		public int t, r, b, l;
 
 		public Piece(int t, int r, int b, int l)
 		//public Piece(int t=0, int r=0, int b=0, int l=0)
 		{
-			top = t;
-			right = r;
-			bottom = b;
-			left = l;
+			this.t = t;
+            this.r = r;
+            this.b = b;
+            this.l = l;
 		}
 
 		public void Set(int t, int r, int b, int l)
 		{
-			top = t;
-			right = r;
-			bottom = b;
-			left = l;
+            this.t = t;
+            this.r = r;
+            this.b = b;
+            this.l = l;
 		}
 
 		public Piece Spined(int nb)
 		{
-			int[] tmp = {top, right, bottom, left};
+			int[] tmp = {t, r, b, l};
 			return new Piece(tmp[(nb+0)%4], tmp[(nb+1)%4], tmp[(nb+2)%4], tmp[(nb+3)%4]);
 		}
 
 		public override string ToString()
 		{
-			return (top==-1?0:top) + " " + (right==-1?0:right) + " " + (bottom==-1?0:bottom) + " " + (left==-1?0:left);
+			return (t==-1?0:t) + " " + (r==-1?0:r) + " " + (b==-1?0:b) + " " + (l==-1?0:l);
 		}
 	}
 }

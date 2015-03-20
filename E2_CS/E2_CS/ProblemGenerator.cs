@@ -27,12 +27,12 @@ namespace E2_CS
 				for (int y = 0; y <= h; ++y)
 				{
 					Piece piece = new Piece();
-					piece.left   = (x == 0) ? 0 : b.Get(x-1,y  ).right;
-					piece.bottom = (y == 0) ? 0 : b.Get(x  ,y-1).top;
+					piece.l   = (x == 0) ? 0 : b.Get(x-1,y  ).r;
+					piece.b = (y == 0) ? 0 : b.Get(x  ,y-1).t;
 					for (int attempt = 0; attempt < 10; ++attempt)
 					{
-						piece.top   = (y == h) ? 0 : rng.Next(1, nbPat);
-						piece.right = (x == w) ? 0 : rng.Next(1, nbPat);
+						piece.t   = (y == h) ? 0 : rng.Next(1, nbPat);
+						piece.r = (x == w) ? 0 : rng.Next(1, nbPat);
 						if (!set.Contains(piece)) break;
 					}
 					set.Add(piece);

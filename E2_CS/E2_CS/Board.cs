@@ -44,10 +44,10 @@ namespace E2_CS
 		{
 			for (int i = 0; i < size; ++i)
 			{
-				pieces[i].top = t;
-				pieces[i].right = r;
-				pieces[i].bottom = b;
-				pieces[i].left = l;
+				pieces[i].t = t;
+				pieces[i].r = r;
+				pieces[i].b = b;
+				pieces[i].l = l;
 			}
 		}
 
@@ -86,10 +86,10 @@ namespace E2_CS
 			Point2D p = lookup[idx];
 			switch (side)
 			{
-				case Side.Left  : return p.x == 0    ? 0 : pieces[idx-1 ].right;
-				case Side.Bottom: return p.y == 0    ? 0 : pieces[idx-wd].top;
-				case Side.Right : return p.x+1 == wd ? 0 : pieces[idx+1 ].left;
-				case Side.Top   : return p.y+1 == ht ? 0 : pieces[idx+wd].bottom;
+				case Side.Left  : return p.x == 0    ? 0 : pieces[idx-1 ].r;
+				case Side.Bottom: return p.y == 0    ? 0 : pieces[idx-wd].t;
+				case Side.Right : return p.x+1 == wd ? 0 : pieces[idx+1 ].l;
+				case Side.Top   : return p.y+1 == ht ? 0 : pieces[idx+wd].b;
 				default: throw new Exception("Asking for an unknown side");
 			}
 		}

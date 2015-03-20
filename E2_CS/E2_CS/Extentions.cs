@@ -39,5 +39,19 @@ namespace E2_CS
 				action(ref a[i]);
 			}
 		}
+
+        public static void FillWith<T>(this T[,,,] a, T val)
+		{
+            int d0 = a.GetLength(0);
+            int d1 = a.GetLength(1);
+            int d2 = a.GetLength(2);
+            int d3 = a.GetLength(3);
+            for (int i = 0; i < d0; ++i)
+                for (int j = 0; j < d1; ++j)
+                    for (int k = 0; k < d2; ++k)
+                        for (int l = 0; l < d2; ++l)
+                            a[i,j,k,l] = val;
+		}
+        
 	}
 }
