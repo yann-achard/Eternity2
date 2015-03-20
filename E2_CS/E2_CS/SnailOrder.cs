@@ -57,7 +57,37 @@ namespace E2_CS
 				x += dx;
 				y += dy;
 			}
+            Swap(1, w-1);
+            Swap(2, w+h-2);
+            Swap(3, w+h+w-3);
 		}
+
+        private void Swap(int a, int b)
+        {
+            if (a > b) {
+                Swap(b, a);
+            }
+            else {
+                if (a+1 < b) {
+                    Swap(b-1, b);
+                    Swap(a, b-1);
+                }
+                else
+                {
+                    int tmp = at[a];
+                    at[a] = at[b];
+                    at[b] = tmp;
+
+                    tmp = at2d[a].x;
+                    at2d[a].x = at2d[b].x;
+                    at2d[b].x = tmp;
+
+                    tmp = at2d[a].y;
+                    at2d[a].y = at2d[b].y;
+                    at2d[b].y = tmp;
+                }
+            }
+        }
 
 		public Piece Get(int idx)
 		{
