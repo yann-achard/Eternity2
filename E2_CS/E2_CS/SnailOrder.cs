@@ -89,6 +89,11 @@ namespace E2_CS
             }
         }
 
+		public int Idx(int idx)
+		{
+			return at[idx];
+		}
+
 		public Piece Get(int idx)
 		{
 			return board.Get(at[idx]);

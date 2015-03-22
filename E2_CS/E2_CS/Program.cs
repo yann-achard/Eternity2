@@ -15,19 +15,19 @@ namespace E2_CS
 		{
 			int seed = 3;
 			Random rng = new Random(seed);
-			float stabilityGoal = 1000.01f;
-			uint stableInARow = 1;
+			double stabilityGoal = 0.01f;
+			uint stableInARow = 100;
 			StatStabilizer stabilizer = new StatStabilizer(stabilityGoal, stableInARow);
-			string filename = @"../../../../Timing2.txt";
+			string filename = @"../../../../Sdev03.txt";
 			File.WriteAllText(filename, "Measuing avg nb of iterations to first solution using snail backtracker\n");
-			File.AppendAllText(filename, "size\tnbCols\tavg\tsdev\truns\tmiliseconds\n");
+			File.AppendAllText(filename, "s\tnbC\tavg  \tsdev   \truns\tmiliseconds\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				int size = 7; 
-				//for (int size = 7; size <= 7; ++size)
+				//int size = 5; 
+				for (int size = 4; size <= 5; ++size)
                 { 
-                    int nbCols = 7;
-					//for (int nbCols = 6; nbCols <= 6; ++nbCols)
+                    //int nbCols = size;
+					for (int nbCols = 3; nbCols <= 6; ++nbCols)
                     {
 						stabilizer.Reset();
 						Stopwatch watch = new Stopwatch();
@@ -40,30 +40,48 @@ namespace E2_CS
 							Problem p = gen.Gen(size, size, nbCols, rng.Next(), out b);
 							//for (;;)
 							{ 
-								//p.pieces.Shuffle(rng);
-								//p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
+								p.pieces.Shuffle(rng);
+								p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
 								BacktrackSolver sol = new BacktrackSolver();
 								List<BoardSolution> solutions = new List<BoardSolution>();
 
-								float iterCount = sol.Solve(p, solutions, false);
+								Action<double, int, Board, bool> collect = (double iter, int idx, Board board, bool isSol) => {
+									if (isSol) {
+										solutions.Add(new BoardSolution(board, iter));
+									}
+								};
 
+								double iterCount = sol.Solve(p, false, collect);
 								//Console.WriteLine("{0} found {3} in {1} iterations / {2}", sol.Name, iterCount, watch.Elapsed, solutions.Count);
-								if (solutions.Count > 0) {
-								    Console.WriteLine("Solution found in {0:0000} iterations", iterCount);
-								//	float min = solutions.Min(s => s.foundOnIteration);
-								//	float avg = solutions.Aggregate<BoardSolution,float>(0, (float v, BoardSolution s) => v + s.foundOnIteration / (float)solutions.Count);
-								//	float max = solutions.Max(s => s.foundOnIteration);
-								//	Console.WriteLine("imin:{0:0.E-00} iavg:{1:0.E-00} imax:{2:0.E-00}", min, avg, max);
-								//	solutions[0].board.Shuffle(new Random());
-									solutions[0].board.CopyToClipboard();
-								}
-								else {
+								if (solutions.Count == 0) {
+									b.CopyToClipboard();
 								    Console.WriteLine("No solution found in {0:0000} iterations", iterCount);
 			                        Console.ReadKey(true);
-								//	b.Shuffle(rng);
-									b.CopyToClipboard();
 								}
+
+								//StandardDev diffSdev = new StandardDev();
+								//StandardDev distSdev = new StandardDev();
+
+								//Action<double, int, Board, bool> action = (double iter, int idx, Board board, bool isSol) => {
+								//	double diff = solutions.MinBy(s => s.board.Diff(board));
+								//	double dist = solutions.MinBy(s => Math.Abs(iterCount - s.foundOnIteration)) / iterCount;
+								//	diffSdev.Feed(diff);
+								//	distSdev.Feed(dist);
+								//};
+
+								//sol.Solve(p, true, action);
+
+								//double avgdiff = diffSdev.Avg;
+								//double avgdist = distSdev.Avg;
+								//double sdevdiff = diffSdev.SDev;
+								//double sdevdist = distSdev.SDev;
+								//double corr = (diffSdev.Var * distSdev.Var) / (sdevdiff * sdevdist);
+
+								//string f = string.Format("s{0} c{1} i{2:0.} avgdiff:{3} avgdist:{4} sdevdiff:{5} sdevdist:{6} corr:{7}",
+								//	size, nbCols, iterCount, avgdiff, avgdist, sdevdiff, sdevdist, corr);
+
 								stabilizer.Feed(iterCount);
+								//Console.WriteLine(f);
 								Console.Write("\b\b\b\b\b{0:0000}", stabilizer.Count);
 								//Console.WriteLine("{0:0.00E-00} \t {1:0.00E-00} \t {2}", stabilizer.Avg, stabilizer.SDev, stabilizer.LastDelta);
 								//ConsoleKeyInfo k = Console.ReadKey(true);
@@ -72,14 +90,14 @@ namespace E2_CS
 							++seed;
 						} // while (stabilizer.CriterionMet == false)
 						watch.Stop();
-						float milisec = (float)watch.ElapsedMilliseconds;
+						double milisec = (double)watch.ElapsedMilliseconds;
 						Console.Write("\b\b\b\b\b");
 						Console.WriteLine("{0} {1} {2:0.00E-00}\t{3:0.00E-00}\t{4}\t{5:0.0}", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec);
 						File.AppendAllText(filename, string.Format("{0}\t{1}\t{2:0.0}\t{3:0.0}\t{4:0.0}\t{5:0.0}\n", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec));
 					}
 				}
 			}
-			//Console.ReadKey(true);
+			Console.ReadKey(true);
 		}
 	}
 }

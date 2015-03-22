@@ -56,6 +56,16 @@ namespace E2_CS
 			pieces.Shuffle(rng);
 		}
 
+		public double Diff(Board b)
+		{
+			int d = 0;
+			for (int i = 0; i < size; ++i)
+			{
+				d += pieces[i].Diff(ref b.pieces[i]);
+			}
+			return (double)(d) / (double)(size*4);
+		}
+
 		public void Set(int x, int y, Piece p)
 		{
 			pieces[y*wd+x] = p;
@@ -120,13 +130,13 @@ namespace E2_CS
 
 	struct BoardSolution
 	{
-		public BoardSolution(Board b, float iteration)
+		public BoardSolution(Board b, double iteration)
 		{
-			board = b;
+			board = new Board(b);
 			foundOnIteration = iteration;
 		}
 
 		public Board board;
-		public float foundOnIteration;
+		public double foundOnIteration;
 	}
 }

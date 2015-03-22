@@ -13,9 +13,9 @@ namespace E2_CS
 			get { return "BacktrackSolver"; }
 		}
 
-		public float Solve(Problem p, List<BoardSolution> solutions, bool findAll = false)
+		public double Solve(Problem p, bool findAll = false, Action<double, int, Board, bool> update = null)
 		{
-			float iterCount = 0;
+			double iterCount = 0;
 			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
 			//PieceFinderOld finder = new PieceFinderOld(p.pieces, p.nbPat);
 			Board board = new Board(p.wd, p.ht);
@@ -50,9 +50,13 @@ namespace E2_CS
 					pieceIndices.Push(pieceIndex);
 					setPiece.Set(t, r, b, l);
 					ord.Set(index, setPiece);
+
+					if (update!=null) {
+						update(iterCount, ord.Idx(index), board, index+1 == board.size);
+					}
+
 					++index;
 					if (index == board.size) {
-						solutions.Add(new BoardSolution(board, iterCount));
 						if (findAll) {
 							--index;
 						}
@@ -62,7 +66,6 @@ namespace E2_CS
 						}
 					}
 				}
-				//board.CopyToClipboard();
 			} while (pieceIndices.Count > 0);
 
 

@@ -10,6 +10,11 @@ namespace E2_CS
 
 	static class Extentions
 	{
+		public static Out MinBy<In,Out>(this IEnumerable<In> e, Func<In,Out> f)
+		{
+			return e.Select( v => f(v)).Min();
+		}
+
 		public static void Shuffle<T>(this IList<T> list, Random rng)
 		{
 			T tmp;

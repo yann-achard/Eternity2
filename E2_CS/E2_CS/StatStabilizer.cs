@@ -14,13 +14,13 @@ namespace E2_CS
 			private set;
 		}
 		
-		public float LastDelta
+		public double LastDelta
 		{
 			get;
 			private set;
 		}
 		
-		public StatStabilizer(float satifyingSdevChangeRatio = 0.1f, uint desiredIterationCountAtStatisfaction = 100)
+		public StatStabilizer(double satifyingSdevChangeRatio = 0.1f, uint desiredIterationCountAtStatisfaction = 100)
 		{
 			this.satifyingSdevRatio = satifyingSdevChangeRatio;
 			this.desiredIterationCountAtStatisfaction = desiredIterationCountAtStatisfaction;
@@ -35,10 +35,10 @@ namespace E2_CS
 			base.Reset();
 		}
 
-		public override void Feed(float val)
+		public override void Feed(double val)
 		{
 			base.Feed(val);
-			float newSdev = SDev;
+			double newSdev = SDev;
 			LastDelta = Math.Abs(newSdev - prevSdev) / prevSdev;
 			if (LastDelta <= satifyingSdevRatio)
 			{
@@ -55,8 +55,8 @@ namespace E2_CS
 			prevSdev = newSdev;
 		}
 
-		private float prevSdev;
-		private float satifyingSdevRatio;
+		private double prevSdev;
+		private double satifyingSdevRatio;
 		private uint desiredIterationCountAtStatisfaction;
 		private uint satisfiedInARow;
 	}

@@ -27,6 +27,16 @@ namespace E2_CS
             this.l = l;
 		}
 
+		public int Diff(ref Piece p)
+		{
+			return
+				(t != p.t ? 1 : 0) + 
+				(r != p.r ? 1 : 0) + 
+				(b != p.b ? 1 : 0) + 
+				(l != p.l ? 1 : 0)
+			;
+		}
+
 		public Piece Spined(int nb)
 		{
 			int[] tmp = {t, r, b, l};
