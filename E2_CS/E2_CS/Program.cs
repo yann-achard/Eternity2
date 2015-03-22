@@ -10,29 +10,71 @@ namespace E2_CS
 {
 	class Program
 	{
+		static int CountInversions(int[] ar)
+		{
+			int nb = 0;
+			for (int i=0; i<ar.Length; ++i)
+			{
+				for (int j = i + 1; j < ar.Length; ++j)
+				{
+					if (ar[i] > ar[j]) ++nb;
+				}
+			}
+			return nb;
+		}
+
+		static int SwapBFS(int[] ar)
+		{
+			Stack<int> stack = new Stack<int>();
+
+		}
+
+		static void TestMinSwapCountTheory()
+		{
+			int seed = 0;
+			int len = 4;
+			int nbIter = 1;
+			Random rng = new Random(seed);
+			int[] ar = new int[len];
+			for (int i=1; i<=len; ++i) ar[i-1] = i;
+			for (int it = 0; it < nbIter; ++it) { 
+				ar.Shuffle(rng);
+				int nbInv = CountInversions(ar);
+				int shortestPath = SwapBFS(ar);
+				if (nbInv != shortestPath)
+				{
+					Debug.Assert(false);
+				}
+			}
+		}
+
+
 		[STAThread]
 		static void Main(string[] args)
 		{
-			int seed = 3;
+			TestMinSwapCountTheory();
+			return;
+			int seed = 0;
 			Random rng = new Random(seed);
 			double stabilityGoal = 0.01f;
 			uint stableInARow = 100;
 			StatStabilizer stabilizer = new StatStabilizer(stabilityGoal, stableInARow);
-			string filename = @"../../../../Sdev03.txt";
+			string filename = @"../../../../NbItersSeed0.txt";
 			File.WriteAllText(filename, "Measuing avg nb of iterations to first solution using snail backtracker\n");
 			File.AppendAllText(filename, "s\tnbC\tavg  \tsdev   \truns\tmiliseconds\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
 				//int size = 5; 
-				for (int size = 4; size <= 5; ++size)
+				for (int size = 4; size <= 7; ++size)
                 { 
                     //int nbCols = size;
-					for (int nbCols = 3; nbCols <= 6; ++nbCols)
+					for (int nbCols = 3; nbCols <= 7; ++nbCols)
                     {
 						stabilizer.Reset();
 						Stopwatch watch = new Stopwatch();
 						watch.Start();
-						while (stabilizer.CriterionMet == false)
+						for (int attempt=0; attempt<10000; ++attempt)
+						//while (stabilizer.CriterionMet == false)
 						{
 							ProblemGenerator gen = new ProblemGenerator();
 
@@ -82,6 +124,7 @@ namespace E2_CS
 
 								stabilizer.Feed(iterCount);
 								//Console.WriteLine(f);
+								File.AppendAllText(filename, string.Format("{0}\t{1}\t{2}\n", size, nbCols, iterCount));
 								Console.Write("\b\b\b\b\b{0:0000}", stabilizer.Count);
 								//Console.WriteLine("{0:0.00E-00} \t {1:0.00E-00} \t {2}", stabilizer.Avg, stabilizer.SDev, stabilizer.LastDelta);
 								//ConsoleKeyInfo k = Console.ReadKey(true);
@@ -93,7 +136,7 @@ namespace E2_CS
 						double milisec = (double)watch.ElapsedMilliseconds;
 						Console.Write("\b\b\b\b\b");
 						Console.WriteLine("{0} {1} {2:0.00E-00}\t{3:0.00E-00}\t{4}\t{5:0.0}", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec);
-						File.AppendAllText(filename, string.Format("{0}\t{1}\t{2:0.0}\t{3:0.0}\t{4:0.0}\t{5:0.0}\n", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec));
+						//File.AppendAllText(filename, string.Format("{0}\t{1}\t{2:0.0}\t{3:0.0}\t{4:0.0}\t{5:0.0}\n", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec));
 					}
 				}
 			}
