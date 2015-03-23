@@ -17,29 +17,79 @@ namespace E2_CS
 			{
 				for (int j = i + 1; j < ar.Length; ++j)
 				{
-					if (ar[i] > ar[j]) ++nb;
+					if (ar[i] > ar[j]) 
+					{
+						++nb;
+						break;
+					}
 				}
 			}
 			return nb;
 		}
 
+		static int CycleSort(int[] ar)
+		{
+			int len = ar.Length;
+			int[] a = new int[len];
+			Array.Copy(ar, a, len);
+			int iter = 0;
+			for (int i = 0; i < len; ++i)
+			{
+				while (a[i] != i)
+				{
+					int v = a[i];
+					a[i] = a[v];
+					a[v] = v;
+					++iter;
+				}
+			}
+			return iter;
+		}
+
 		static int SwapBFS(int[] ar)
 		{
-			Stack<int> stack = new Stack<int>();
-
+			int len = ar.Length;
+			Queue<int[]> q = new Queue<int[]>();
+			Queue<int> q2 = new Queue<int>();
+			q.Enqueue(ar);
+			q2.Enqueue(0);
+			while (q.Count > 0)
+			{
+				int[] a = q.Dequeue();
+				int d = q2.Dequeue();
+				bool sorted = true;
+				for (int i = 0; i < len; ++i)
+				{
+					if (a[i] != i)
+					{
+						sorted = false;
+						int[] a2 = new int[len];
+						Array.Copy(a, a2, len);
+						a2[a2[i]] = a[i];
+						a2[i] = a[a[i]];
+						q.Enqueue(a2);
+						q2.Enqueue(d+1);
+					}
+				}
+				if (sorted)
+				{
+					return d;
+				}
+			}
+			return -1;
 		}
 
 		static void TestMinSwapCountTheory()
 		{
-			int seed = 0;
-			int len = 4;
-			int nbIter = 1;
+			int seed = 4;
+			int len = 8;
+			int nbIter = 1000;
 			Random rng = new Random(seed);
 			int[] ar = new int[len];
-			for (int i=1; i<=len; ++i) ar[i-1] = i;
+			for (int i=0; i<len; ++i) ar[i] = i;
 			for (int it = 0; it < nbIter; ++it) { 
 				ar.Shuffle(rng);
-				int nbInv = CountInversions(ar);
+				int nbInv = CycleSort(ar);
 				int shortestPath = SwapBFS(ar);
 				if (nbInv != shortestPath)
 				{
@@ -52,8 +102,6 @@ namespace E2_CS
 		[STAThread]
 		static void Main(string[] args)
 		{
-			TestMinSwapCountTheory();
-			return;
 			int seed = 0;
 			Random rng = new Random(seed);
 			double stabilityGoal = 0.01f;
