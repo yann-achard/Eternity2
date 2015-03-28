@@ -13,6 +13,8 @@ namespace E2_CS
 			wd = w;
 			ht = h;
 			size = wd * ht;
+			horCleftCount = wd * (ht-1);
+			verCleftCount = ht * (wd-1);
 			pieces = new Piece[size];
 			lookup = new Point2D[size];
 			int idx = 0;
@@ -25,7 +27,10 @@ namespace E2_CS
 					++idx;
 				}
 			}
-			ResetAllTo(-1, -1, -1, -1);
+			clefts = new int[2][];
+			clefts[0] = new int[horCleftCount];
+			clefts[1] = new int[verCleftCount];
+			ResetAllTo(-1);
 		}
 
 		public Board(Board b)
@@ -40,16 +45,58 @@ namespace E2_CS
 			}
 		}
 
-		public void	ResetAllTo(int t, int r, int b, int l)
+		public void	ResetAllTo(int val)
 		{
 			for (int i = 0; i < size; ++i)
 			{
-				pieces[i].t = t;
-				pieces[i].r = r;
-				pieces[i].b = b;
-				pieces[i].l = l;
+				pieces[i].t = val;
+				pieces[i].r = val;
+				pieces[i].b = val;
+				pieces[i].l = val;
 			}
+
+			clefts[0].FillWith(val);
+			clefts[1].FillWith(val);
 		}
+
+        public void SetBordersTo(int val)
+        {
+            for (int y=ht-1; y>=0; --y)
+			{
+                pieces[wd*y].l = val;
+                pieces[wd*y+wd-1].r = val;
+            }
+			for (int x = 0; x < wd; ++x)
+            {
+                pieces[x].b = val;
+                pieces[x+wd*(ht-1)].t = val;
+            }
+        }
+
+        public int GetCleft(Angle a, int i)
+        {
+            return clefts[(int)a][i];
+        }
+
+        public void SetCleft(Angle a, int i, int col)
+        {
+            clefts[(int)a][i] = col;
+        }
+
+        public void CleftsToPieces()
+        {
+			SetBordersTo(0);
+			int i = 0;
+            for (int y=0; y<ht; ++y) {
+                for (int x=0; x<wd; ++x) {
+                    if (y+1<ht) pieces[x+y*wd].t = clefts[(int)Angle.Hor][i];
+                    if (y  > 0) pieces[x+y*wd].b = clefts[(int)Angle.Hor][i-wd];
+                    if (x+1<wd) pieces[x+y*wd].r = clefts[(int)Angle.Ver][x*ht+y];
+                    if (x  > 0) pieces[x+y*wd].l = clefts[(int)Angle.Ver][x*ht+y-ht];
+					++i;
+                }
+            }
+        }
 
 		public void Shuffle(Random rng)
 		{
@@ -106,6 +153,7 @@ namespace E2_CS
 
 		public void CopyToClipboard()
 		{
+            CleftsToPieces();
 			StringBuilder sb = new StringBuilder(pieces.Length * 3);
 			for (int y=ht-1; y>=0; --y)
 			{
@@ -123,7 +171,8 @@ namespace E2_CS
 			System.Windows.Forms.Clipboard.SetText(sb.ToString());
 		}
 
-		public int wd, ht, size;
+		public int wd, ht, size, horCleftCount, verCleftCount;
+		private int[][] clefts;
 		private Piece[] pieces;
 		private Point2D[] lookup;
 	}

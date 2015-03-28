@@ -45,6 +45,12 @@ namespace E2_CS
 			}
 		}
 
+        public static void FillWith<T>(this T[] a, T val)
+		{
+            int d0 = a.GetLength(0);
+            for (int i = 0; i < d0; ++i) a[i] = val;
+		}
+
         public static void FillWith<T>(this T[,,,] a, T val)
 		{
             int d0 = a.GetLength(0);

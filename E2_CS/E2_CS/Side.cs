@@ -4,4 +4,9 @@
 	{
 		Top, Right, Bottom, Left
 	}
+
+    enum Angle
+	{
+		Hor, Ver
+	}
 }

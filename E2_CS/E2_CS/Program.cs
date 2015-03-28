@@ -107,16 +107,16 @@ namespace E2_CS
 			double stabilityGoal = 0.01f;
 			uint stableInARow = 100;
 			StatStabilizer stabilizer = new StatStabilizer(stabilityGoal, stableInARow);
-			string filename = @"../../../../NbItersSeed0.txt";
-			File.WriteAllText(filename, "Measuing avg nb of iterations to first solution using snail backtracker\n");
+			string filename = @"../../../../NbItersCleftSwapSeed0.txt";
+			File.WriteAllText(filename, "Measuing avg nb of iterations to first solution using cleft swapping\n");
 			File.AppendAllText(filename, "s\tnbC\tavg  \tsdev   \truns\tmiliseconds\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				//int size = 5; 
-				for (int size = 4; size <= 7; ++size)
+				int size = 5; 
+				//for (int size = 4; size <= 7; ++size)
                 { 
-                    //int nbCols = size;
-					for (int nbCols = 3; nbCols <= 7; ++nbCols)
+                    int nbCols = size;
+					//for (int nbCols = 3; nbCols <= 7; ++nbCols)
                     {
 						stabilizer.Reset();
 						Stopwatch watch = new Stopwatch();
@@ -132,7 +132,7 @@ namespace E2_CS
 							{ 
 								p.pieces.Shuffle(rng);
 								p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
-								BacktrackSolver sol = new BacktrackSolver();
+								CleftSwapSolver sol = new CleftSwapSolver();
 								List<BoardSolution> solutions = new List<BoardSolution>();
 
 								Action<double, int, Board, bool> collect = (double iter, int idx, Board board, bool isSol) => {
@@ -145,7 +145,7 @@ namespace E2_CS
 								//Console.WriteLine("{0} found {3} in {1} iterations / {2}", sol.Name, iterCount, watch.Elapsed, solutions.Count);
 								if (solutions.Count == 0) {
 									b.CopyToClipboard();
-								    Console.WriteLine("No solution found in {0:0000} iterations", iterCount);
+								    Console.WriteLine("\b\b\b\b\bNo solution found in {0:0000} iterations", iterCount);
 			                        Console.ReadKey(true);
 								}
 
