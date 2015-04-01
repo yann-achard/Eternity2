@@ -107,7 +107,7 @@ namespace E2_CS
 			double stabilityGoal = 0.01f;
 			uint stableInARow = 100;
 			StatStabilizer stabilizer = new StatStabilizer(stabilityGoal, stableInARow);
-			string filename = @"../../../../NbItersCleftSwapSeed0.txt";
+			string filename = @"../../../../NbItersCleftBacktrackSeed0.txt";
 			File.WriteAllText(filename, "Measuing avg nb of iterations to first solution using cleft swapping\n");
 			File.AppendAllText(filename, "s\tnbC\tavg  \tsdev   \truns\tmiliseconds\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
@@ -132,7 +132,7 @@ namespace E2_CS
 							{ 
 								p.pieces.Shuffle(rng);
 								p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
-								CleftSwapSolver sol = new CleftSwapSolver();
+								CleftBacktrackSolver sol = new CleftBacktrackSolver();
 								List<BoardSolution> solutions = new List<BoardSolution>();
 
 								Action<double, int, Board, bool> collect = (double iter, int idx, Board board, bool isSol) => {
