@@ -15,6 +15,11 @@ namespace E2_CS
 			return e.Select( v => f(v)).Min();
 		}
 
+        public static IEnumerable<int> Repeat(this Random rng, int max, int count)
+        {
+            for (int i=0; i<count; ++i) yield return rng.Next(max);
+        }
+
 		public static void Shuffle<T>(this IList<T> list, Random rng)
 		{
 			T tmp;
@@ -49,6 +54,18 @@ namespace E2_CS
 		{
             int d0 = a.GetLength(0);
             for (int i = 0; i < d0; ++i) a[i] = val;
+		}
+
+        public static void FillWith<T>(this T[] a, Func<T> init)
+		{
+            int d0 = a.GetLength(0);
+            for (int i = 0; i < d0; ++i) a[i] = init();
+		}
+
+        public static void FillWith<T>(this T[] a, Func<int,T> init)
+		{
+            int d0 = a.GetLength(0);
+            for (int i = 0; i < d0; ++i) a[i] = init(i);
 		}
 
         public static void FillWith<T>(this T[,,,] a, T val)

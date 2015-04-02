@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace E2_CS
 {
-	class SnailOrder : BoardOrder
+	class PieceSnailOrder : BoardOrder
 	{
-		public SnailOrder(Board b)
+		public PieceSnailOrder(Board b)
 		{
 			board = b;
 			int w = b.wd;
@@ -89,33 +89,33 @@ namespace E2_CS
             }
         }
 
-		public int Idx(int idx)
+		public virtual int Idx(int idx)
 		{
 			return at[idx];
 		}
 
-		public Piece Get(int idx)
+		public virtual Piece Get(int idx)
 		{
 			return board.Get(at[idx]);
 		}
 
-		public void Set(int idx, Piece p)
+		public virtual void Set(int idx, Piece p)
 		{
 			board.Set(at[idx], p);
 		}
 		
-		public void Set(int idx, int t, int r, int b, int l)
+		public virtual void Set(int idx, int t, int r, int b, int l)
 		{
 			board.Set(at[idx], t, r, b, l);
 		}
 		
-		public int GetSide(Side side, int idx)
+		public virtual int GetSide(Side side, int idx)
 		{
 			return board.GetSide(side, at[idx]);
 		}
 
-		private Point2D[] at2d;
-		private int[] at;
-		private Board board;
+		protected Point2D[] at2d;
+		protected int[] at;
+		protected Board board;
 	}
 }

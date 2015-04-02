@@ -12,11 +12,7 @@ namespace E2_CS
 		public Problem Gen(int w, int h, int nbPat, int seed, out Board b)
 		{
 			Random rng = new Random(seed);
-			Problem p = new Problem();
-
-			p.wd = w;
-			p.ht = h;
-			p.nbPat = nbPat;
+			Problem p = new Problem(w, h, nbPat);
 
 			b = new Board(w,h);
 			HashSet<Piece> set = new HashSet<Piece>();

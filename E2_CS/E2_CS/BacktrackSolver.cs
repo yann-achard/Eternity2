@@ -19,7 +19,7 @@ namespace E2_CS
 			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
 			//PieceFinderOld finder = new PieceFinderOld(p.pieces, p.nbPat);
 			Board board = new Board(p.wd, p.ht);
-			SnailOrder ord = new SnailOrder(board);
+			PieceSnailOrder ord = new PieceSnailOrder(board);
 			Piece resetPiece = new Piece(-1, -1, -1, -1);
 			Piece   setPiece = new Piece();
 			Stack<int> pieceIndices = new Stack<int>();

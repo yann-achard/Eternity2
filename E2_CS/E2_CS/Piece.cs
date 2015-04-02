@@ -27,6 +27,29 @@ namespace E2_CS
             this.l = l;
 		}
 
+        public void Set(Side side, int col)
+        {
+            switch (side)
+            {
+                case Side.Top: t = col; break;
+                case Side.Right: r = col; break;
+                case Side.Bottom: b = col; break;
+                case Side.Left: l = col; break;
+            }
+        }
+
+        public int Get(Side side)
+        {
+            switch (side)
+            {
+                case Side.Top: return t;
+                case Side.Right: return r;
+                case Side.Bottom: return b;
+                case Side.Left: return l;
+                default: return -1;
+            }
+        }
+
 		public int Diff(ref Piece p)
 		{
 			return
@@ -48,4 +71,16 @@ namespace E2_CS
 			return (t==-1?0:t) + " " + (r==-1?0:r) + " " + (b==-1?0:b) + " " + (l==-1?0:l);
 		}
 	}
+
+    struct SpunPiece
+    {
+        public SpunPiece(Piece p, int index)
+        {
+            piece = p;
+            pieceIndex = index;
+        }
+
+        public Piece piece;
+        public int pieceIndex;
+    }
 }

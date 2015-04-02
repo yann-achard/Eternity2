@@ -112,10 +112,10 @@ namespace E2_CS
 			File.AppendAllText(filename, "s\tnbC\tavg  \tsdev   \truns\tmiliseconds\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				int size = 5; 
+				int size = 2; 
 				//for (int size = 4; size <= 7; ++size)
                 { 
-                    int nbCols = size;
+                    int nbCols = size+2;
 					//for (int nbCols = 3; nbCols <= 7; ++nbCols)
                     {
 						stabilizer.Reset();

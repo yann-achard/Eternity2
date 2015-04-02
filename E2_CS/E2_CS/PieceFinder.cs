@@ -65,6 +65,37 @@ namespace E2_CS
 			return -1;
 		}
 
+		public void ListAll(int t, int r, int b, int l, ISet<SpunPiece> set)
+        {
+            int rmin = r != -1 ? r : 0;
+            int bmin = b != -1 ? b : 0;
+            int lmin = l != -1 ? l : 0;
+            int tmax = t != -1 ? t : m_nbPat - 1; // optim
+            int rmax = r != -1 ? r : m_nbPat - 1; // optim
+            int bmax = b != -1 ? b : m_nbPat - 1; // optim
+            int lmax = l != -1 ? l : m_nbPat - 1; // optim
+            t = t != -1 ? t : 0;
+            r = r != -1 ? r : 0;
+            b = b != -1 ? b : 0;
+            l = l != -1 ? l : 0;
+            for (; t <= tmax; ++t) {
+                for (; r <= rmax; ++r) {
+                    for (; b <= bmax; ++b) {
+                        for (; l <= lmax; ++l) {
+                            if (m_count[m_piecesIndex[t, r, b, l]] > 0)
+                            {
+                                set.Add(new SpunPiece( new Piece(t, r, b, l), m_piecesIndex[t, r, b, l]));
+                            }
+                        }
+                        l = lmin;
+                    }
+                    b = bmin;
+                }
+                r = rmin;
+            }
+        }
+
+
         public void Restore(int idx)
         {
             ++m_count[m_piecesIndex[(idx >> 24), (idx >> 16) & 0xff, (idx >> 8) & 0xff, idx & 0xff]];

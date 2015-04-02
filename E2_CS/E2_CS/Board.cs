@@ -8,6 +8,17 @@ namespace E2_CS
 {
 	class Board
 	{
+        public struct PieceSide
+        {
+            public PieceSide(int idx, Side s)
+            {
+                index = idx;
+                side = s;
+            }
+
+            public int index;
+            public Side side;
+        }
 		public Board(int w, int h)
 		{
 			wd = w;
@@ -17,7 +28,11 @@ namespace E2_CS
 			verCleftCount = ht * (wd-1);
             cleftCount = horCleftCount + verCleftCount;
 			pieces = new Piece[size];
+
 			lookup = new Point2D[size];
+            cleftToPieceMap = new List<PieceSide>[cleftCount];
+            cleftToPieceMap.FillWith(()=>new List<PieceSide>(2));
+            pieceToCleftMap = new Dictionary<PieceSide, int>();
 			int idx = 0;
 			for (int y = 0; y < ht; ++y)
 			{
@@ -25,6 +40,21 @@ namespace E2_CS
 				{
 					lookup[idx].x = x;
 					lookup[idx].y = y;
+
+                    int t = idx;
+                    int r = horCleftCount+x*ht+y;
+                    int b = idx-w;
+                    int l = r-ht;
+
+                    if (y+1 < ht) pieceToCleftMap.Add(new PieceSide(idx, Side.Top),     t);
+                    if (x+1 < wd) pieceToCleftMap.Add(new PieceSide(idx, Side.Right),   r);
+                    if (y   >  0) pieceToCleftMap.Add(new PieceSide(idx, Side.Bottom),  b);
+                    if (x   >  0) pieceToCleftMap.Add(new PieceSide(idx, Side.Left),    l);
+
+                    if (y+1 < ht) cleftToPieceMap[t].Add(new PieceSide(idx, Side.Top));
+                    if (x+1 < wd) cleftToPieceMap[r].Add(new PieceSide(idx, Side.Right));
+                    if (y   >  0) cleftToPieceMap[b].Add(new PieceSide(idx, Side.Bottom));
+                    if (x   >  0) cleftToPieceMap[l].Add(new PieceSide(idx, Side.Left));
 					++idx;
 				}
 			}
@@ -40,10 +70,17 @@ namespace E2_CS
             cleftCount = b.cleftCount;
             horCleftCount = b.horCleftCount;
             verCleftCount = b.verCleftCount;
+
 			pieces = new Piece[size];
             Array.Copy(b.pieces, pieces, pieces.Length);
+
 			clefts = new int[horCleftCount+verCleftCount];
             Array.Copy(b.clefts, clefts, clefts.Length);
+
+            // Shallow copy these
+            lookup = b.lookup;
+            cleftToPieceMap = b.cleftToPieceMap;
+            pieceToCleftMap = b.pieceToCleftMap;
 		}
 
 		public void	ResetAllTo(int val)
@@ -81,6 +118,7 @@ namespace E2_CS
         public void SetCleft(int i, int col)
         {
             clefts[i] = col;
+            foreach (PieceSide ps in cleftToPieceMap[i]) pieces[ps.index].Set(ps.side, col);
         }
 
         public void CleftsToPieces()
@@ -115,17 +153,25 @@ namespace E2_CS
 
 		public void Set(int x, int y, Piece p)
 		{
-			pieces[y*wd+x] = p;
+			Set(y*wd+x, p);
 		}
 
 		public void Set(int idx, Piece p)
 		{
 			pieces[idx] = p;
+            pieceToCleftMap[new PieceSide(idx, Side.Top)] = p.t; 
+            pieceToCleftMap[new PieceSide(idx, Side.Right)] = p.r; 
+            pieceToCleftMap[new PieceSide(idx, Side.Bottom)] = p.b; 
+            pieceToCleftMap[new PieceSide(idx, Side.Left)] = p.l; 
 		}
 
 		public void Set(int idx, int t, int r, int b, int l)
 		{
 			pieces[idx].Set(t, r, b, l);
+            pieceToCleftMap[new PieceSide(idx, Side.Top)] = t; 
+            pieceToCleftMap[new PieceSide(idx, Side.Right)] = r; 
+            pieceToCleftMap[new PieceSide(idx, Side.Bottom)] = b; 
+            pieceToCleftMap[new PieceSide(idx, Side.Left)] = l; 
 		}
 
 		public Piece Get(int x, int y)
@@ -173,7 +219,9 @@ namespace E2_CS
 		public int wd, ht, size, cleftCount, horCleftCount, verCleftCount;
 		private int[] clefts;
 		private Piece[] pieces;
-		private Point2D[] lookup;
+		public Point2D[] lookup;
+		public List<PieceSide>[] cleftToPieceMap;
+		public Dictionary<PieceSide, int> pieceToCleftMap;
 	}
 
 	struct BoardSolution
