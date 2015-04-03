@@ -102,7 +102,7 @@ namespace E2_CS
 		[STAThread]
 		static void Main(string[] args)
 		{
-			int seed = 0;
+			int seed = 2;
 			Random rng = new Random(seed);
 			double stabilityGoal = 0.01f;
 			uint stableInARow = 100;
@@ -112,7 +112,7 @@ namespace E2_CS
 			File.AppendAllText(filename, "s\tnbC\tavg  \tsdev   \truns\tmiliseconds\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				int size = 2; 
+				int size = 5; 
 				//for (int size = 4; size <= 7; ++size)
                 { 
                     int nbCols = size+2;

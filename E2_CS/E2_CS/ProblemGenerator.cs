@@ -36,6 +36,7 @@ namespace E2_CS
 					p.pieces.Add(piece);
 				}
 			}
+			b.CopyToClipboard();
 			return p;
 		}
 	}

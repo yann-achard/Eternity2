@@ -8,7 +8,7 @@ namespace E2_CS
 {
     class ContentionSolver
     {
-        public static bool IsSatisfiable<Person,Cookie>(IDictionary<Person, HashSet<Cookie>> needs, int nbCookies)
+        public static bool Solve<Person,Cookie>(IDictionary<Person, HashSet<Cookie>> needs, int nbCookies, IDictionary<Person,Cookie> solution = null)
         {
             var nbPeopleLeft = needs.Count;
             if (nbPeopleLeft > nbCookies) return false;
@@ -16,32 +16,31 @@ namespace E2_CS
             var perCookieInterests = new HashSet<Person>[nbCookies];
             perCookieInterests.FillWith( () => new HashSet<Person>() );
 
-            nbCookies = 0;
+            int nbCookiesLeft = 0;
             foreach (KeyValuePair<Person, HashSet<Cookie>> kv in needs)
             {
                 foreach (Cookie c in kv.Value)
                 {
                     int index;
                     if (cookieIndices.TryGetValue(c, out index) == false) {
-                        index = nbCookies++;
+                        index = nbCookiesLeft++;
                         cookieIndices.Add(c, index);
                     }
                     perCookieInterests[index].Add(kv.Key);
                 }
             }
-            if (nbPeopleLeft > nbCookies) return false;
+            if (nbPeopleLeft > nbCookiesLeft) return false;
 
-            var sortedIndices = Enumerable.Range(0,nbCookies).ToArray();
+            var sortedIndices = Enumerable.Range(0,nbCookiesLeft).ToArray();
             Array.Sort(sortedIndices, Comparer<int>.Create( (a,b) => perCookieInterests[a].Count.CompareTo(perCookieInterests[b].Count) ));
 
-            int nbCookiesLeft = nbCookies;
-            for (int cookieIndex = 0; cookieIndex < nbCookies; ++cookieIndex)
+            for (int cookieIndex = 0; cookieIndex < nbCookiesLeft; ++cookieIndex)
             {
                 var interestedPeople = perCookieInterests[cookieIndex];
                 if (interestedPeople.Count == 0)
                 {
                     --nbCookiesLeft;
-                    if (nbPeopleLeft > nbCookies) return false;
+                    if (nbPeopleLeft > nbCookiesLeft) return false;
                 }
                 else
                 {
@@ -50,6 +49,7 @@ namespace E2_CS
                     foreach (Cookie cookie in needs[luckyPerson])
                     {
                         int currIdx = cookieIndices[cookie];
+						if (solution != null && currIdx == cookieIndex) solution.Add(luckyPerson, cookie);
                         var otherPeopleForOtherCookies = perCookieInterests[currIdx];
                         otherPeopleForOtherCookies.Remove(luckyPerson);
                         int newCount = otherPeopleForOtherCookies.Count;
@@ -100,12 +100,12 @@ namespace E2_CS
                 int nbCookies;
                 Dictionary<int, HashSet<int>> needs;
                 needs = GenerateCase(rng, true, i, out nbCookies);
-                if (!IsSatisfiable(needs, nbCookies))
+                if (!Solve(needs, nbCookies))
                 {
                     throw new Exception();
                 }
                 needs = GenerateCase(rng, false, i, out nbCookies);
-                if (IsSatisfiable(needs, nbCookies))
+                if (Solve(needs, nbCookies))
                 {
                     throw new Exception();
                 }

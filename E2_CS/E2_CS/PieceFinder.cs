@@ -13,6 +13,8 @@ namespace E2_CS
             m_nbPat = nbPat;
             m_pieces = pieces.ToArray();
             m_count = new int[pieces.Count+1]; // One extra so we can use it as a sentinel
+            m_piecesIds = new List<int>[pieces.Count+1]; // One extra so we can use it as a sentinel
+			m_piecesIds.FillWith(() => new List<int>());
             Array.Clear(m_count, 0, m_count.Length);
             m_piecesIndex = new int[nbPat, nbPat, nbPat, nbPat];
             m_piecesIndex.FillWith(pieces.Count); // Piece signatures that don't have a piece will be directed toward the sentinel
@@ -29,6 +31,7 @@ namespace E2_CS
                     m_piecesIndex[p.l, p.t, p.r, p.b] = idx;
                 }
                 ++m_count[countIdx];
+				m_piecesIds[countIdx].Add(idx);
             }
         }
 
@@ -84,7 +87,9 @@ namespace E2_CS
                         for (; l <= lmax; ++l) {
                             if (m_count[m_piecesIndex[t, r, b, l]] > 0)
                             {
-                                set.Add(new SpunPiece( new Piece(t, r, b, l), m_piecesIndex[t, r, b, l]));
+                                set.UnionWith(m_piecesIds[m_piecesIndex[t, r, b, l]].Select(
+									idx => new SpunPiece( new Piece(t, r, b, l), idx)
+								));
                             }
                         }
                         l = lmin;
@@ -110,6 +115,7 @@ namespace E2_CS
         Piece[] m_pieces;
         int[, , ,] m_piecesIndex;
         int[] m_count;
+		List<int>[] m_piecesIds;
 	}
 
 	class PieceFinderOld

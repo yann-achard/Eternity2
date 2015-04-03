@@ -30,7 +30,7 @@ namespace E2_CS
 
             int nbClefts = board.cleftCount;
             int nbPieces = board.size;
-            int cleftIndex = 0;
+            int cleftNumber = 0;
 
             Stack<StackElem> stack = new Stack<StackElem>(nbClefts);
             StackElem se = new StackElem();
@@ -40,15 +40,15 @@ namespace E2_CS
             do {
                 ++iterCount;
 
-                int cleftIdx = ord.Idx(cleftIndex);
-                Board.PieceSide slot1 = board.cleftToPieceMap[cleftIndex][0];
-                Board.PieceSide slot2 = board.cleftToPieceMap[cleftIndex][1];
+                int cleftIdx = ord.Idx(cleftNumber);
+                Board.PieceSide slot1 = board.cleftToPieceMap[cleftIdx][0];
+                Board.PieceSide slot2 = board.cleftToPieceMap[cleftIdx][1];
                 var spunSet1 = slots[slot1.index];
                 var spunSet2 = slots[slot2.index];
                 spunSet1.Clear();
                 spunSet2.Clear();
                 
-                if (stack.Count > cleftIndex)
+                if (stack.Count > cleftNumber)
                 {
                     // Retrieve the old color
                     se = stack.Pop();
@@ -71,7 +71,8 @@ namespace E2_CS
                 while (se.color != p.nbPat)
                 {
                     // Set the color we're going to try to use
-                    board.SetCleft(cleftIndex, se.color);
+                    board.SetCleft(cleftIdx, se.color);
+					//board.CopyToClipboard();
 
                     // Find all the pieces that could go into slot one
 				    int t = board.GetSide(Side.Top,     slot1.index);
@@ -98,7 +99,7 @@ namespace E2_CS
                             allNeeds.Add(slot2.index, new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex)));
 
                             // Check if there's any way all the needs can be met
-                            if (ContentionSolver.IsSatisfiable(allNeeds, p.nbPat))
+                            if (ContentionSolver.Solve(allNeeds, nbPieces))
                             {
                                 break; // We've found a suitable color for the cleft
                             }
@@ -115,22 +116,22 @@ namespace E2_CS
                 }
 
 				// If we found a suitable color
-                if (se.color <= p.nbPat)
+                if (se.color < p.nbPat)
                 {
                     stack.Push(se);
                     
-                    if (update != null) update(iterCount, cleftIndex, board, cleftIndex+1 == nbClefts);
+                    if (update != null) update(iterCount, cleftIdx, board, cleftNumber+1 == nbClefts);
 
-                    ++cleftIndex;
-                    if (cleftIndex == nbClefts) {
-						if (findAll) --cleftIndex; else break;
+                    ++cleftNumber;
+                    if (cleftNumber == nbClefts) {
+						if (findAll) --cleftNumber; else break;
 					}
                 } else {
                     // Restore the fact that there is now no requried color on this cleft
-                    board.SetCleft(cleftIndex, -1);
+                    board.SetCleft(cleftIdx, -1);
 
 					// Next we're focusing on the previous cleft
-                    --cleftIndex;
+                    --cleftNumber;
                 }
 
             }
