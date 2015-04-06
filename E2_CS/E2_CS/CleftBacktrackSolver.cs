@@ -98,8 +98,9 @@ namespace E2_CS
                             allNeeds.Add(slot1.index, new HashSet<int>(spunSet1.Select(sp => sp.pieceIndex)));
                             allNeeds.Add(slot2.index, new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex)));
 
+							Dictionary<int,int> solution = null; //new Dictionary<int,int>();
                             // Check if there's any way all the needs can be met
-                            if (ContentionSolver.Solve(allNeeds, nbPieces))
+                            if (ContentionSolver.Solve(allNeeds, nbPieces, solution))
                             {
                                 break; // We've found a suitable color for the cleft
                             }

@@ -102,26 +102,27 @@ namespace E2_CS
 		[STAThread]
 		static void Main(string[] args)
 		{
-			int seed = 2;
+
+			//ContentionSolver.UnitTest(3,500);
+
+			int seed = 0;
 			Random rng = new Random(seed);
-			double stabilityGoal = 0.01f;
-			uint stableInARow = 100;
-			StatStabilizer stabilizer = new StatStabilizer(stabilityGoal, stableInARow);
+			Median median = new Median();
 			string filename = @"../../../../NbItersCleftBacktrackSeed0.txt";
-			File.WriteAllText(filename, "Measuing avg nb of iterations to first solution using cleft swapping\n");
-			File.AppendAllText(filename, "s\tnbC\tavg  \tsdev   \truns\tmiliseconds\n");
+			File.WriteAllText(filename, "Measuing median nb of iterations to first solution using cleft backtracking\n");
+			File.AppendAllText(filename, "s\tnbC\tmedian\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				int size = 5; 
-				//for (int size = 4; size <= 7; ++size)
+				//int size = 6; 
+				for (int size = 4; size <= 7; ++size)
                 { 
-                    int nbCols = size+2;
-					//for (int nbCols = 3; nbCols <= 7; ++nbCols)
+                    //int nbCols = size+2;
+					for (int nbCols = 4; nbCols <= 7; ++nbCols)
                     {
-						stabilizer.Reset();
+						median.Reset();
 						Stopwatch watch = new Stopwatch();
 						watch.Start();
-						for (int attempt=0; attempt<10000; ++attempt)
+						for (int attempt=0; attempt<100; ++attempt)
 						//while (stabilizer.CriterionMet == false)
 						{
 							ProblemGenerator gen = new ProblemGenerator();
@@ -153,8 +154,8 @@ namespace E2_CS
 								//StandardDev distSdev = new StandardDev();
 
 								//Action<double, int, Board, bool> action = (double iter, int idx, Board board, bool isSol) => {
-								//	double diff = solutions.MinBy(s => s.board.Diff(board));
-								//	double dist = solutions.MinBy(s => Math.Abs(iterCount - s.foundOnIteration)) / iterCount;
+								//	double diff = solutions.Min(s => s.board.Diff(board));
+								//	double dist = solutions.Min(s => Math.Abs(iterCount - s.foundOnIteration)) / iterCount;
 								//	diffSdev.Feed(diff);
 								//	distSdev.Feed(dist);
 								//};
@@ -170,10 +171,9 @@ namespace E2_CS
 								//string f = string.Format("s{0} c{1} i{2:0.} avgdiff:{3} avgdist:{4} sdevdiff:{5} sdevdist:{6} corr:{7}",
 								//	size, nbCols, iterCount, avgdiff, avgdist, sdevdiff, sdevdist, corr);
 
-								stabilizer.Feed(iterCount);
+								median.Feed(iterCount);
 								//Console.WriteLine(f);
-								File.AppendAllText(filename, string.Format("{0}\t{1}\t{2}\n", size, nbCols, iterCount));
-								Console.Write("\b\b\b\b\b{0:0000}", stabilizer.Count);
+								Console.Write("\b\b\b\b\b{0:0000}", attempt);
 								//Console.WriteLine("{0:0.00E-00} \t {1:0.00E-00} \t {2}", stabilizer.Avg, stabilizer.SDev, stabilizer.LastDelta);
 								//ConsoleKeyInfo k = Console.ReadKey(true);
 								//if (k.Key != ConsoleKey.Enter) break;
@@ -183,7 +183,8 @@ namespace E2_CS
 						watch.Stop();
 						double milisec = (double)watch.ElapsedMilliseconds;
 						Console.Write("\b\b\b\b\b");
-						Console.WriteLine("{0} {1} {2:0.00E-00}\t{3:0.00E-00}\t{4}\t{5:0.0}", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec);
+						//Console.WriteLine("{0} {1} {2:0.00E-00}\t{3:0.00E-00}\t{4}\t{5:0.0}", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec);
+						File.AppendAllText(filename, string.Format("{0}\t{1}\t{2}\n", size, nbCols, median.GetMedian()));
 						//File.AppendAllText(filename, string.Format("{0}\t{1}\t{2:0.0}\t{3:0.0}\t{4:0.0}\t{5:0.0}\n", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec));
 					}
 				}

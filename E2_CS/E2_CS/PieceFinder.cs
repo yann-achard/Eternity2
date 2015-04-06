@@ -87,9 +87,10 @@ namespace E2_CS
                         for (; l <= lmax; ++l) {
                             if (m_count[m_piecesIndex[t, r, b, l]] > 0)
                             {
-                                set.UnionWith(m_piecesIds[m_piecesIndex[t, r, b, l]].Select(
-									idx => new SpunPiece( new Piece(t, r, b, l), idx)
-								));
+								foreach (int idx in m_piecesIds[m_piecesIndex[t, r, b, l]]) {
+									var newItem = new SpunPiece( new Piece(t, r, b, l), idx);
+									set.Add(newItem);
+								}
                             }
                         }
                         l = lmin;
