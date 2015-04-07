@@ -21,23 +21,15 @@ namespace E2_CS
             int nbCookiesLeft = 0;
             foreach (KeyValuePair<Person, HashSet<Cookie>> kv in needs)
             {
-				if (kv.Value.Count == 1)
+				foreach (Cookie c in kv.Value)
 				{
-					if (solution!=null) solution.Add(kv.Key, kv.Value.First());
-					--nbPeopleLeft;
-				}
-				else
-				{
-					foreach (Cookie c in kv.Value)
-					{
-						int index;
-						if (cookieIndices.TryGetValue(c, out index) == false) {
-							index = nbCookiesLeft++;
-							cookieIndices.Add(c, index);
-							perCookieInterests[index] = new HashSet<Person>();
-						}
-						perCookieInterests[index].Add(kv.Key);
+					int index;
+					if (cookieIndices.TryGetValue(c, out index) == false) {
+						index = nbCookiesLeft++;
+						cookieIndices.Add(c, index);
+						perCookieInterests[index] = new HashSet<Person>();
 					}
+					perCookieInterests[index].Add(kv.Key);
 				}
             }
             if (nbPeopleLeft > nbCookiesLeft) return false;
@@ -55,7 +47,9 @@ namespace E2_CS
 				{
 					foreach (Cookie c in kv.Value)
 					{
-						File.AppendAllText(filename, "\"p"+kv.Key+"\" -- \"c"+c+"["+cookieIndices[c]+"]"+sortedReverseIndices[cookieIndices[c]]+"th\"\n");
+						int idx = cookieIndices.ContainsKey(c) ? cookieIndices[c] : -1;
+						int ridx = cookieIndices.ContainsKey(c) ? sortedReverseIndices[idx] : -1;
+						File.AppendAllText(filename, "\"p"+kv.Key+"\" -- \"c"+c+"["+idx+"]"+ridx+"th\"\n");
 					}
 
 				}
@@ -138,10 +132,19 @@ namespace E2_CS
 
         public static bool UnitTest(int minSize, int maxSize)
         {
+			Dictionary<int, HashSet<int>> needs;
+			needs = new Dictionary<int,HashSet<int>>();
+			needs.Add(1, new HashSet<int>(){0,1,2});
+			needs.Add(0, new HashSet<int>(){0,1});
+			needs.Add(2, new HashSet<int>(){0,2});
+            if (!Solve(needs, 3))
+            {
+                throw new Exception();
+            }       
+
             Random rng = new Random(5);
             for (int i=minSize; i<maxSize; ++i) {
                 int nbCookies;
-                Dictionary<int, HashSet<int>> needs;
                 needs = GenerateCase(rng, true, i, out nbCookies);
                 if (!Solve(needs, nbCookies))
                 {
@@ -152,7 +155,7 @@ namespace E2_CS
                 {
                     throw new Exception();
                 }
-            }
+			}
             return true;
         }
     }
