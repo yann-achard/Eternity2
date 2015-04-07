@@ -25,8 +25,8 @@ namespace E2_CS
             Board board = new Board(p.wd, p.ht);
 			CleftSnailOrder ord = new CleftSnailOrder(board);
 			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
-            HashSet<SpunPiece>[] slots = new HashSet<SpunPiece>[board.size];
-            slots.FillWith(() => new HashSet<SpunPiece>());
+            var spunSet1 = new List<SpunPiece>(board.size);
+            var spunSet2 = new List<SpunPiece>(board.size);
 
             int nbClefts = board.cleftCount;
             int nbPieces = board.size;
@@ -43,8 +43,6 @@ namespace E2_CS
                 int cleftIdx = ord.Idx(cleftNumber);
                 Board.PieceSide slot1 = board.cleftToPieceMap[cleftIdx][0];
                 Board.PieceSide slot2 = board.cleftToPieceMap[cleftIdx][1];
-                var spunSet1 = slots[slot1.index];
-                var spunSet2 = slots[slot2.index];
                 spunSet1.Clear();
                 spunSet2.Clear();
                 

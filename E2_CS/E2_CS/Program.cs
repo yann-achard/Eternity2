@@ -105,7 +105,8 @@ namespace E2_CS
 
 			//ContentionSolver.UnitTest(3,500);
 
-			int seed = 0;
+			// Best: 16x16 over 18 colors @ Seed 4 => 5 seonds
+			int seed = 4;
 			Random rng = new Random(seed);
 			Median median = new Median();
 			string filename = @"../../../../NbItersCleftBacktrackSeed0.txt";
@@ -113,23 +114,22 @@ namespace E2_CS
 			File.AppendAllText(filename, "s\tnbC\tmedian\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				//int size = 6; 
-				for (int size = 4; size <= 7; ++size)
+				int size = 16; 
+				//for (int size = 4; size <= 7; ++size)
                 { 
-                    //int nbCols = size+2;
-					for (int nbCols = 4; nbCols <= 7; ++nbCols)
+                    int nbCols = 18;//size+2;
+					//for (int nbCols = 4; nbCols <= 7; ++nbCols)
                     {
 						median.Reset();
 						Stopwatch watch = new Stopwatch();
 						watch.Start();
-						for (int attempt=0; attempt<100; ++attempt)
+						for (int attempt=1; attempt<=100; ++attempt)
 						//while (stabilizer.CriterionMet == false)
 						{
 							ProblemGenerator gen = new ProblemGenerator();
 
 							Board b;
 							Problem p = gen.Gen(size, size, nbCols, rng.Next(), out b);
-							//for (;;)
 							{ 
 								p.pieces.Shuffle(rng);
 								p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
@@ -148,6 +148,11 @@ namespace E2_CS
 									b.CopyToClipboard();
 								    Console.WriteLine("\b\b\b\b\bNo solution found in {0:0000} iterations", iterCount);
 			                        Console.ReadKey(true);
+								}
+								else
+								{
+									b.CopyToClipboard();
+									return;
 								}
 
 								//StandardDev diffSdev = new StandardDev();

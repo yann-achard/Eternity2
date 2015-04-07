@@ -68,7 +68,7 @@ namespace E2_CS
 			return -1;
 		}
 
-		public void ListAll(int t, int r, int b, int l, ISet<SpunPiece> set)
+		public void ListAll(int t, int r, int b, int l, IList<SpunPiece> set)
         {
             int rmin = r != -1 ? r : 0;
             int bmin = b != -1 ? b : 0;
