@@ -105,8 +105,9 @@ namespace E2_CS
 
 			//ContentionSolver.UnitTest(3,500);
 
-			// Best: 16x16 over 18 colors @ Seed 4 => 5 seonds
-			int seed = 4;
+			// Best: 16x16 over 19 colors @ Seed 57 => 4 seonds
+			// Best: 16x16 over 18 colors @ Seed 4 => 10 seonds
+			int seed = 57;
 			Random rng = new Random(seed);
 			Median median = new Median();
 			string filename = @"../../../../NbItersCleftBacktrackSeed0.txt";
@@ -114,10 +115,10 @@ namespace E2_CS
 			File.AppendAllText(filename, "s\tnbC\tmedian\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				int size = 16; 
+				int size = 16;
 				//for (int size = 4; size <= 7; ++size)
                 { 
-                    int nbCols = 18;//size+2;
+                    int nbCols = 19;
 					//for (int nbCols = 4; nbCols <= 7; ++nbCols)
                     {
 						median.Reset();

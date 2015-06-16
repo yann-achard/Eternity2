@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace E2_CS
@@ -101,6 +102,18 @@ namespace E2_CS
             }
         }
 
+		public bool Verify(int t, int r, int b, int l, IList<SpunPiece> set)
+		{
+			Piece desired = new Piece(t, r, b, l);
+			for (int idx=0; idx < m_pieces.Length; ++idx)
+			{
+				if (desired.EquivalentModuloUknownsTo(m_pieces[idx]) != set.Any(sp => sp.pieceIndex == idx)) {
+					return false;
+				}
+			}
+
+			return true;
+		}
 
         public void Restore(int idx)
         {
@@ -113,7 +126,7 @@ namespace E2_CS
         }
 
         int m_nbPat;
-        Piece[] m_pieces;
+        public Piece[] m_pieces;
         int[, , ,] m_piecesIndex;
         int[] m_count;
 		List<int>[] m_piecesIds;

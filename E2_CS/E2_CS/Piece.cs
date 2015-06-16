@@ -19,6 +19,24 @@ namespace E2_CS
             this.l = l;
 		}
 
+		public bool EquivalentTo(Piece p)
+		{
+			return
+				(t==p.t && r==p.r && b==p.b && l==p.l) ||
+				(r==p.t && b==p.r && l==p.b && t==p.l) ||
+				(b==p.t && l==p.r && t==p.b && r==p.l) ||
+				(l==p.t && t==p.r && r==p.b && b==p.l);
+		}
+
+		public bool EquivalentModuloUknownsTo(Piece p)
+		{
+			return
+				((t==p.t || t==-1 || p.t==-1) && (r==p.r || r==-1 || p.r==-1) && (b==p.b || b==-1 || p.b==-1) && (l==p.l || l==-1 || p.l==-1)) ||
+				((r==p.t || r==-1 || p.t==-1) && (b==p.r || b==-1 || p.r==-1) && (l==p.b || l==-1 || p.b==-1) && (t==p.l || t==-1 || p.l==-1)) ||
+				((b==p.t || b==-1 || p.t==-1) && (l==p.r || l==-1 || p.r==-1) && (t==p.b || t==-1 || p.b==-1) && (r==p.l || r==-1 || p.l==-1)) ||
+				((l==p.t || l==-1 || p.t==-1) && (t==p.r || t==-1 || p.r==-1) && (r==p.b || r==-1 || p.b==-1) && (b==p.l || b==-1 || p.l==-1));
+		}	
+
 		public void Set(int t, int r, int b, int l)
 		{
             this.t = t;
