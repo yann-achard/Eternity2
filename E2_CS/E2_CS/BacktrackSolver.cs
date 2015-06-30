@@ -18,7 +18,7 @@ namespace E2_CS
 			double iterCount = 0;
 			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
 			//PieceFinderOld finder = new PieceFinderOld(p.pieces, p.nbPat);
-			Board board = new Board(p.wd, p.ht);
+			Board board = new Board(p.wd, p.ht, p.nbPat);
 			PieceSnailOrder ord = new PieceSnailOrder(board);
 			Piece resetPiece = new Piece(-1, -1, -1, -1);
 			Piece   setPiece = new Piece();

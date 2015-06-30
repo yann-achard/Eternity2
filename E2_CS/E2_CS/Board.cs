@@ -19,10 +19,11 @@ namespace E2_CS
             public int index;
             public Side side;
         }
-		public Board(int w, int h)
+		public Board(int w, int h, int cPat)
 		{
 			wd = w;
 			ht = h;
+			nbPat = cPat;
 			size = wd * ht;
 			horCleftCount = wd * (ht-1);
 			verCleftCount = ht * (wd-1);
@@ -66,6 +67,7 @@ namespace E2_CS
 		{
 			wd = b.wd;
 			ht = b.ht;
+			nbPat = b.nbPat;
 			size = b.size;
             cleftCount = b.cleftCount;
             horCleftCount = b.horCleftCount;
@@ -213,10 +215,10 @@ namespace E2_CS
 				}
 				sb.Append('\n');
 			}
-			System.Windows.Forms.Clipboard.SetText(sb.ToString());
+			//System.Windows.Forms.Clipboard.SetText(sb.ToString());
 		}
 
-		public int wd, ht, size, cleftCount, horCleftCount, verCleftCount;
+		public int wd, ht, nbPat, size, cleftCount, horCleftCount, verCleftCount;
 		private int[] clefts;
 		private Piece[] pieces;
 		public Point2D[] lookup;

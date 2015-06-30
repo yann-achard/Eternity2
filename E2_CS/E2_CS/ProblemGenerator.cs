@@ -14,7 +14,7 @@ namespace E2_CS
 			Random rng = new Random(seed);
 			Problem p = new Problem(w, h, nbPat);
 
-			b = new Board(w,h);
+			b = new Board(w,h,nbPat);
 			HashSet<Piece> set = new HashSet<Piece>();
 			--w;
 			--h;

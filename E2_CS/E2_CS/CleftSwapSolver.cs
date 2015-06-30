@@ -18,7 +18,7 @@ namespace E2_CS
             p.ComputeColourDistribution();
             double iterCount = 0;
 
-            Board board = new Board(p.wd, p.ht);
+				Board board = new Board(p.wd, p.ht, p.nbPat);
             GenerateFullBoard(p, board);
 
             board.CleftsToPieces();

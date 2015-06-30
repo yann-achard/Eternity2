@@ -115,10 +115,10 @@ namespace E2_CS
 			File.AppendAllText(filename, "s\tnbC\tmedian\n");
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				int size = 16;
+				int size = 12;
 				//for (int size = 4; size <= 7; ++size)
                 { 
-                    int nbCols = 19;
+                    int nbCols = 5;
 					//for (int nbCols = 4; nbCols <= 7; ++nbCols)
                     {
 						median.Reset();
@@ -152,7 +152,10 @@ namespace E2_CS
 								}
 								else
 								{
-									b.CopyToClipboard();
+									if (p.IsEquivalentTo(solutions[0].board))
+										b.CopyToClipboard(); // GOOD!
+									else
+										b.CopyToClipboard(); // BAD!
 									return;
 								}
 

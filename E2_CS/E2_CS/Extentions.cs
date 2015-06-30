@@ -76,10 +76,15 @@ namespace E2_CS
 			}
 		}
 
-        public static void FillWith<T>(this T[] a, T val)
+		public static void FillWith<T>(this T[] a, T val)
 		{
-            int d0 = a.GetLength(0);
-            for (int i = 0; i < d0; ++i) a[i] = val;
+			int d0 = a.GetLength(0);
+			for (int i = 0; i < d0; ++i) a[i] = val;
+		}
+
+		public static void FillNWith<T>(this T[] a, int n, T val)
+		{
+			for (int i = 0; i < n; ++i) a[i] = val;
 		}
 
         public static void FillWith<T>(this T[] a, Func<T> init)
@@ -103,9 +108,8 @@ namespace E2_CS
             for (int i = 0; i < d0; ++i)
                 for (int j = 0; j < d1; ++j)
                     for (int k = 0; k < d2; ++k)
-                        for (int l = 0; l < d2; ++l)
+                        for (int l = 0; l < d3; ++l)
                             a[i,j,k,l] = val;
 		}
-        
 	}
 }

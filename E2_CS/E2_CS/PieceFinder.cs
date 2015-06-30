@@ -9,7 +9,7 @@ namespace E2_CS
 {
 	class PieceFinder
 	{
-		public PieceFinder(IReadOnlyList<Piece> pieces, int nbPat)
+		public PieceFinder(List<Piece> pieces, int nbPat)
 		{
             m_nbPat = nbPat;
             m_pieces = pieces.ToArray();
@@ -134,7 +134,7 @@ namespace E2_CS
 
 	class PieceFinderOld
 	{
-		public PieceFinderOld(IReadOnlyList<Piece> pieces, int nbPat)
+		public PieceFinderOld(List<Piece> pieces, int nbPat)
 		{
 			m_pieces = pieces.ToArray();
 			m_used = new bool[pieces.Count];

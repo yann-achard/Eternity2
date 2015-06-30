@@ -6,139 +6,142 @@ using System.Threading.Tasks;
 
 namespace E2_CS
 {
-    class CleftBacktrackSolver
-    {
-        public string Name
+	class CleftBacktrackSolver
+	{
+		public string Name
 		{
 			get { return "CleftBacktrackSolver"; }
 		}
 
-        struct StackElem
-        {
-            public int color;
-            public int piece1;
-            public int piece2;
-        }
+		struct StackElem
+		{
+			public int color;
+			public int piece1;
+			public int piece2;
+		}
 
-	    public double Solve(Problem p, bool findAll = false, Action<double, int, Board, bool> update = null)
-        {
-            Board board = new Board(p.wd, p.ht);
+		public double Solve(Problem p, bool findAll = false, Action<double, int, Board, bool> update = null)
+		{
+			Board board = new Board(p.wd, p.ht, p.nbPat);
+			board.SetBordersTo(0);
 			CleftSnailOrder ord = new CleftSnailOrder(board);
+			ContentionSolver contentionSolver = new ContentionSolver(board.size, board.size);
 			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
-            var spunSet1 = new List<SpunPiece>(board.size);
-            var spunSet2 = new List<SpunPiece>(board.size);
 
-            int nbClefts = board.cleftCount;
-            int nbPieces = board.size;
-            int cleftNumber = 0;
+			var spunSet1 = new List<SpunPiece>(board.size);
+			var spunSet2 = new List<SpunPiece>(board.size);
 
-            Stack<StackElem> stack = new Stack<StackElem>(nbClefts);
-            StackElem se = new StackElem();
-            var allNeeds = new Dictionary<int,HashSet<int>>();
+			int nbClefts = board.cleftCount;
+			int nbPieces = board.size;
+			int cleftNumber = 0;
 
-            double iterCount = 0;
-            do {
-                ++iterCount;
+			Stack<StackElem> stack = new Stack<StackElem>(nbClefts);
+			StackElem se = new StackElem();
+			var allNeeds = new Dictionary<int,HashSet<int>>();
 
-                int cleftIdx = ord.Idx(cleftNumber);
-                Board.PieceSide slot1 = board.cleftToPieceMap[cleftIdx][0];
-                Board.PieceSide slot2 = board.cleftToPieceMap[cleftIdx][1];
-                spunSet1.Clear();
-                spunSet2.Clear();
-                
-                if (stack.Count > cleftNumber)
-                {
-                    // Retrieve the old color
-                    se = stack.Pop();
+			double iterCount = 0;
+			do {
+				++iterCount;
 
-                    // Remove the needs for the two slots that the cleft coressponds to
-                    allNeeds.Remove(slot1.index);
-                    allNeeds.Remove(slot2.index);
-                }
-                else
-                {
-                    se.color = 0;
-                    se.piece1 = 0;
-                    se.piece2 = 0;
-                }
+				int cleftIdx = ord.Idx(cleftNumber);
+				Board.PieceSide slot1 = board.cleftToPieceMap[cleftIdx][0];
+				Board.PieceSide slot2 = board.cleftToPieceMap[cleftIdx][1];
+				spunSet1.Clear();
+				spunSet2.Clear();
 
-                // We want to try the next color
-                ++se.color;
+				if (stack.Count > cleftNumber)
+				{
+					// Retrieve the old color
+					se = stack.Pop();
 
-                // Find first color that's available and valid
-                while (se.color != p.nbPat)
-                {
-                    // Set the color we're going to try to use
-                    board.SetCleft(cleftIdx, se.color);
+					// Remove the needs for the two slots that the cleft coressponds to
+					allNeeds.Remove(slot1.index);
+					allNeeds.Remove(slot2.index);
+				}
+				else
+				{
+					se.color = 0;
+					se.piece1 = 0;
+					se.piece2 = 0;
+				}
+
+				// We want to try the next color
+				++se.color;
+
+				// Find first color that's available and valid
+				while (se.color != p.nbPat)
+				{
+					// Set the color we're going to try to use
+					board.SetCleft(cleftIdx, se.color);
 					//board.CopyToClipboard();
 
-                    // Find all the pieces that could go into slot one
-				    int t = board.GetSide(Side.Top,     slot1.index);
-				    int r = board.GetSide(Side.Right,   slot1.index);
-				    int b = board.GetSide(Side.Bottom,  slot1.index);
-				    int l = board.GetSide(Side.Left,    slot1.index);
-                    finder.ListAll(t, r, b, l, spunSet1);
+					// Find all the pieces that could go into slot one
+					int t = board.GetSide(Side.Top,     slot1.index);
+					int r = board.GetSide(Side.Right,   slot1.index);
+					int b = board.GetSide(Side.Bottom,  slot1.index);
+					int l = board.GetSide(Side.Left,    slot1.index);
+					finder.ListAll(t, r, b, l, spunSet1);
 
-                    if (spunSet1.Count > 0)
-                    {
-                        // Find all the pieces that could go into slot two
-				        t = board.GetSide(Side.Top,     slot2.index);
-				        r = board.GetSide(Side.Right,   slot2.index);
-				        b = board.GetSide(Side.Bottom,  slot2.index);
-				        l = board.GetSide(Side.Left,    slot2.index);
-                        finder.ListAll(t, r, b, l, spunSet2);
+					if (spunSet1.Count > 0)
+					{
+						// Find all the pieces that could go into slot two
+						t = board.GetSide(Side.Top,     slot2.index);
+						r = board.GetSide(Side.Right,   slot2.index);
+						b = board.GetSide(Side.Bottom,  slot2.index);
+						l = board.GetSide(Side.Left,    slot2.index);
+						finder.ListAll(t, r, b, l, spunSet2);
 
 						if (spunSet2.Count > 0)
-                        {
-                            // Add the needs of each slot to the list of all the needs
-                            allNeeds.Remove(slot1.index);
-                            allNeeds.Remove(slot2.index);
-                            allNeeds.Add(slot1.index, new HashSet<int>(spunSet1.Select(sp => sp.pieceIndex)));
-                            allNeeds.Add(slot2.index, new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex)));
+						{
+							// Add the needs of each slot to the list of all the needs
+							allNeeds.Remove(slot1.index);
+							allNeeds.Remove(slot2.index);
+							allNeeds.Add(slot1.index, new HashSet<int>(spunSet1.Select(sp => sp.pieceIndex)));
+							allNeeds.Add(slot2.index, new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex)));
 
 							Dictionary<int,int> solution = null; //new Dictionary<int,int>();
-                            // Check if there's any way all the needs can be met
-                            if (ContentionSolver.Solve(allNeeds, nbPieces, solution))
-                            {
-                                break; // We've found a suitable color for the cleft
-                            }
+							// Check if there's any way all the needs can be met
+							if (contentionSolver.Solve(allNeeds, nbPieces, solution))
+							{
+								break; // We've found a suitable color for the cleft
+							}
 
-                            allNeeds.Remove(slot1.index);
-                            allNeeds.Remove(slot2.index); 
-                            spunSet2.Clear();
-                        }
-                        spunSet1.Clear();
-                    }
+							allNeeds.Remove(slot1.index);
+							allNeeds.Remove(slot2.index); 
+							spunSet2.Clear();
+						}
+						spunSet1.Clear();
+					}
 
 					// Try the next color
 					++se.color;
-                }
+				}
 
 				// If we found a suitable color
-                if (se.color < p.nbPat)
-                {
-                    stack.Push(se);
-                    
-                    if (update != null) update(iterCount, cleftIdx, board, cleftNumber+1 == nbClefts);
+				if (se.color < p.nbPat)
+				{
+					stack.Push(se);
 
-                    ++cleftNumber;
-                    if (cleftNumber == nbClefts) {
+					if (update != null) update(iterCount, cleftIdx, board, cleftNumber+1 == nbClefts);
+
+					++cleftNumber;
+					if (cleftNumber == nbClefts) {
 						if (findAll) --cleftNumber; else break;
 					}
-                } else {
-                    // Restore the fact that there is now no requried color on this cleft
-                    board.SetCleft(cleftIdx, -1);
+				} else {
+					// Restore the fact that there is now no requried color on this cleft
+					board.SetCleft(cleftIdx, -1);
 
 					// Next we're focusing on the previous cleft
-                    --cleftNumber;
-                }
+					--cleftNumber;
+				}
 
-            }
-            while (stack.Count > 0);
+			}
+			while (stack.Count > 0);
 
-            board.CopyToClipboard();
+			board.CopyToClipboard();
 
-            return iterCount;
-        }
-    }
+			return iterCount;
+		}
+	}
 }
