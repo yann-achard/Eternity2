@@ -50,7 +50,7 @@
     <Compile Include="CleftBacktrackSolver.cs" />
     <Compile Include="ContentionSolver.cs" />
     <Compile Include="Extentions.cs" />
-    <Compile Include="Median.cs" />
+    <Compile Include="Percentile.cs" />
     <Compile Include="PieceFinder.cs" />
     <Compile Include="PiecesSnailOrder.cs" />
     <Compile Include="Point2D.cs" />

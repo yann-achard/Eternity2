@@ -107,43 +107,49 @@ namespace E2_CS
 
 			// Best: 16x16 over 19 colors @ Seed 57 => 4 seonds
 			// Best: 16x16 over 18 colors @ Seed 4 => 10 seonds
-			int seed = 57;
+			int seed = 0;
 			Random rng = new Random(seed);
-			Median median = new Median();
-			string filename = @"../../../../NbItersCleftBacktrackSeed0.txt";
-			File.WriteAllText(filename, "Measuing median nb of iterations to first solution using cleft backtracking\n");
-			File.AppendAllText(filename, "s\tnbC\tmedian\n");
+			Percentile per = new Percentile();
+			//string filename = @"../../../../TimeFirstSol_CleftBacktrackBasicOrdSeed0.txt";
+			//File.WriteAllText(filename, "Measuring time to first solution using cleft backtracking with vanila ordering\n");
+			//File.AppendAllText(filename, "size\tnbC\tnbAttempts\tmin\t25%%\t50%%\t75%%\tmax\n");
+			int nbAttempts = 1;
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				int size = 12;
-				//for (int size = 4; size <= 7; ++size)
+				int size = 6;
+				//for (int size = 4; size <= 16; ++size)
                 { 
-                    int nbCols = 5;
-					//for (int nbCols = 4; nbCols <= 7; ++nbCols)
+                    int nbCols = 10;
+					//for (int nbCols = 23; nbCols <= 40; ++nbCols)
                     {
-						median.Reset();
-						Stopwatch watch = new Stopwatch();
-						watch.Start();
-						for (int attempt=1; attempt<=100; ++attempt)
+						per.Reset();
+						Stopwatch timer = new Stopwatch();
+						timer.Start();
+						for (int attempt=1; attempt<=10; ++attempt)
 						//while (stabilizer.CriterionMet == false)
 						{
+							//if (timer.Elapsed.TotalMinutes > 6 && attempt > 10) break;
 							ProblemGenerator gen = new ProblemGenerator();
 
 							Board b;
 							Problem p = gen.Gen(size, size, nbCols, rng.Next(), out b);
 							{ 
+								b.PiecesToClefts();
 								p.pieces.Shuffle(rng);
 								p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
 								CleftBacktrackSolver sol = new CleftBacktrackSolver();
 								List<BoardSolution> solutions = new List<BoardSolution>();
 
 								Action<double, int, Board, bool> collect = (double iter, int idx, Board board, bool isSol) => {
-									if (isSol) {
+									if (isSol && solutions.Count == 0) {
 										solutions.Add(new BoardSolution(board, iter));
 									}
 								};
 
-								double iterCount = sol.Solve(p, false, collect);
+								Stopwatch watch = new Stopwatch();
+								watch.Start();
+								double iterCount = sol.Solve(p, true, collect/*, b*/);
+								watch.Stop();
 								//Console.WriteLine("{0} found {3} in {1} iterations / {2}", sol.Name, iterCount, watch.Elapsed, solutions.Count);
 								if (solutions.Count == 0) {
 									b.CopyToClipboard();
@@ -153,10 +159,9 @@ namespace E2_CS
 								else
 								{
 									if (p.IsEquivalentTo(solutions[0].board))
-										b.CopyToClipboard(); // GOOD!
+										;//b.CopyToClipboard(); // GOOD!
 									else
 										b.CopyToClipboard(); // BAD!
-									return;
 								}
 
 								//StandardDev diffSdev = new StandardDev();
@@ -180,24 +185,25 @@ namespace E2_CS
 								//string f = string.Format("s{0} c{1} i{2:0.} avgdiff:{3} avgdist:{4} sdevdiff:{5} sdevdist:{6} corr:{7}",
 								//	size, nbCols, iterCount, avgdiff, avgdist, sdevdiff, sdevdist, corr);
 
-								median.Feed(iterCount);
+								per.Feed(watch.Elapsed.TotalSeconds);
 								//Console.WriteLine(f);
-								Console.Write("\b\b\b\b\b{0:0000}", attempt);
-								//Console.WriteLine("{0:0.00E-00} \t {1:0.00E-00} \t {2}", stabilizer.Avg, stabilizer.SDev, stabilizer.LastDelta);
-								//ConsoleKeyInfo k = Console.ReadKey(true);
-								//if (k.Key != ConsoleKey.Enter) break;
+								//Console.Write("\b\b\b\b\b{0:0000}", attempt);
+								nbAttempts = attempt;
 							}
-							++seed;
-						} // while (stabilizer.CriterionMet == false)
-						watch.Stop();
-						double milisec = (double)watch.ElapsedMilliseconds;
-						Console.Write("\b\b\b\b\b");
-						//Console.WriteLine("{0} {1} {2:0.00E-00}\t{3:0.00E-00}\t{4}\t{5:0.0}", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec);
-						File.AppendAllText(filename, string.Format("{0}\t{1}\t{2}\n", size, nbCols, median.GetMedian()));
-						//File.AppendAllText(filename, string.Format("{0}\t{1}\t{2:0.0}\t{3:0.0}\t{4:0.0}\t{5:0.0}\n", size, nbCols, stabilizer.Avg, stabilizer.SDev, stabilizer.Count, milisec));
+							//++seed;
+							timer.Stop();
+							Console.WriteLine(timer.Elapsed.TotalMilliseconds);
+							timer.Reset();
+							timer.Start();
+						}
+						//Console.Write("\b\b\b\b\b");
+						
+						//File.AppendAllText(filename, string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\n",
+						//	size, nbCols, nbAttempts, per.GetPercentile(0), per.GetPercentile(25), per.GetMedian(), per.GetPercentile(75), per.GetPercentile(100)));
 					}
 				}
 			}
+			Console.WriteLine("\nDone");
 			Console.ReadKey(true);
 		}
 	}

@@ -14,9 +14,9 @@ namespace E2_CS
 		//public Piece(int t=0, int r=0, int b=0, int l=0)
 		{
 			this.t = t;
-         this.r = r;
-         this.b = b;
-         this.l = l;
+			this.r = r;
+			this.b = b;
+			this.l = l;
 		}
 
 		public bool EquivalentTo(Piece p)

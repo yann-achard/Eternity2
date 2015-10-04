@@ -6,35 +6,54 @@ using System.Threading.Tasks;
 
 namespace E2_CS
 {
-	class Median
+	class Percentile
 	{
 		List<double> temp;
+		bool isSorted;
 
-		public Median()
+		public Percentile()
 		{
 			temp = new List<double>();
+			isSorted = false;
 		}
 
 		public void Feed(double val)
 		{
 			temp.Add(val);
+			isSorted = false;
 		}
 
 		public void Reset()
 		{
 			temp.Clear();
+			isSorted = false;
+		}
+
+		private void EnsureSorted()
+		{
+			if (temp.Count == 0)
+			{
+				throw new InvalidOperationException("Empty collection");
+			}
+			if (!isSorted)
+			{
+				temp.Sort();
+				isSorted = true;
+			}
+		}
+
+		public double GetPercentile(double p)
+		{
+			EnsureSorted();
+			int idx = (int)(p / 100.0 * (double)(temp.Count-1));
+			return temp[idx];
 		}
 
 		public double GetMedian()
 		{
-			temp.Sort();
-
+			EnsureSorted();
 			int count = temp.Count;
-			if (count == 0)
-			{
-				throw new InvalidOperationException("Empty collection");
-			}
-			else if (count % 2 == 0)
+			if (count % 2 == 0)
 			{
 				// count is even, average two middle elements
 				double a = temp[count / 2 - 1];

@@ -1,5 +1,8 @@
-﻿using System;
+﻿//#define TIMING
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -45,7 +48,38 @@ namespace E2_CS
 		}
 
 
+#if TIMING
+		static string filename = @"../../../../SolverTimes_GoodOrder_Size6_Seed0.txt";
+		static ContentionSolver()
+		{
+			File.WriteAllText(filename, "nKids\tnToys\tnHung\tmsTime\n");
+		}
+#endif
+
 		public bool Solve<Person,Toy>(IDictionary<int, HashSet<int>> hungers, int _nbToys, IDictionary<Person,Toy> solution = null)
+		{
+#if TIMING
+			int nbKids = hungers.Count;
+			int nbToys = _nbToys;
+			int nbHungers = 0;
+			Stopwatch timer = new Stopwatch();
+			foreach (var kv in hungers)
+				nbHungers += kv.Value.Count;
+			timer.Reset();
+			timer.Start();
+#endif
+			bool res = false;
+			for (int i=0; i<1000; ++i)
+				res = DoSolve(hungers, _nbToys, solution);
+			
+#if TIMING
+			timer.Stop();
+			File.AppendAllText(filename,  string.Format("{0}\t{1}\t{2}\t{3}\n", nbKid, nbToy, nbHungers, timer.ElapsedMilliseconds));
+#endif
+			return res;
+		}
+
+		public bool DoSolve<Person,Toy>(IDictionary<int, HashSet<int>> hungers, int _nbToys, IDictionary<Person,Toy> solution = null)
 		{
 			int nbInterests = 0;
 			nbKid = 0;

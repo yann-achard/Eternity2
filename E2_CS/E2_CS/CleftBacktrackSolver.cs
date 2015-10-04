@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define LOG_PROGRESS
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,11 +22,19 @@ namespace E2_CS
 			public int piece2;
 		}
 
-		public double Solve(Problem p, bool findAll = false, Action<double, int, Board, bool> update = null)
+#if LOG_PROGRESS
+		static int PROGRESS_DEPTH = 50;
+		static int[] PROGRESS = new int[PROGRESS_DEPTH];
+#endif
+
+		public double Solve(Problem p, bool findAll = false, Action<double, int, Board, bool> update = null, Board guide = null)
 		{
+#if LOG_PROGRESS
+			PROGRESS.FillWith(0);
+#endif
 			Board board = new Board(p.wd, p.ht, p.nbPat);
 			board.SetBordersTo(0);
-			CleftSnailOrder ord = new CleftSnailOrder(board);
+			PieceSnailOrder ord = new CleftSnailOrder(board);
 			ContentionSolver contentionSolver = new ContentionSolver(board.size, board.size);
 			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
 
@@ -43,7 +53,7 @@ namespace E2_CS
 			do {
 				++iterCount;
 
-				int cleftIdx = ord.Idx(cleftNumber);
+				int cleftIdx = ord.Idx(cleftNumber); //cleftNumber;
 				Board.PieceSide slot1 = board.cleftToPieceMap[cleftIdx][0];
 				Board.PieceSide slot2 = board.cleftToPieceMap[cleftIdx][1];
 				spunSet1.Clear();
@@ -67,10 +77,19 @@ namespace E2_CS
 
 				// We want to try the next color
 				++se.color;
+				if (guide != null)
+					se.color = guide.GetCleft(cleftIdx);
 
 				// Find first color that's available and valid
 				while (se.color != p.nbPat)
 				{
+#if LOG_PROGRESS
+					if (cleftNumber < PROGRESS_DEPTH)
+					{
+						for (int z=0; z<cleftNumber; ++z) Console.Out.Write("  ");
+						Console.Out.WriteLine("{0}:{1}", cleftNumber, se.color);
+					}
+#endif
 					// Set the color we're going to try to use
 					board.SetCleft(cleftIdx, se.color);
 					//board.CopyToClipboard();

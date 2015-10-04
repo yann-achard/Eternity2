@@ -123,6 +123,20 @@ namespace E2_CS
             foreach (PieceSide ps in cleftToPieceMap[i]) pieces[ps.index].Set(ps.side, col);
         }
 
+        public void PiecesToClefts()
+		{
+			int i = 0;
+            for (int y=0; y<ht; ++y) {
+                for (int x=0; x<wd; ++x) {
+                    if (y+1<ht) clefts[i] = pieces[x+y*wd].t;
+                    if (y  > 0) clefts[i-wd] = pieces[x+y*wd].b;
+                    if (x+1<wd) clefts[horCleftCount+x*ht+y] = pieces[x+y*wd].r;
+                    if (x  > 0) clefts[horCleftCount+x*ht+y-ht] = pieces[x+y*wd].l;
+					++i;
+                }
+            }
+		}
+
         public void CleftsToPieces()
         {
 			SetBordersTo(0);
@@ -215,7 +229,7 @@ namespace E2_CS
 				}
 				sb.Append('\n');
 			}
-			//System.Windows.Forms.Clipboard.SetText(sb.ToString());
+			System.Windows.Forms.Clipboard.SetText(sb.ToString());
 		}
 
 		public int wd, ht, nbPat, size, cleftCount, horCleftCount, verCleftCount;
