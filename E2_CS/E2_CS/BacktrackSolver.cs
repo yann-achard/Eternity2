@@ -16,7 +16,7 @@ namespace E2_CS
 		public double Solve(Problem p, bool findAll = false, Action<double, int, Board, bool> update = null)
 		{
 			double iterCount = 0;
-			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
+			PieceFinderOneAtATime finder = new PieceFinderOneAtATime(p.pieces, p.nbPat);
 			//PieceFinderOld finder = new PieceFinderOld(p.pieces, p.nbPat);
 			Board board = new Board(p.wd, p.ht, p.nbPat);
 			PieceSnailOrder ord = new PieceSnailOrder(board);

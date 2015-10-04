@@ -107,7 +107,7 @@ namespace E2_CS
 
 			// Best: 16x16 over 19 colors @ Seed 57 => 4 seonds
 			// Best: 16x16 over 18 colors @ Seed 4 => 10 seonds
-			int seed = 0;
+			int seed = 1;
 			Random rng = new Random(seed);
 			Percentile per = new Percentile();
 			//string filename = @"../../../../TimeFirstSol_CleftBacktrackBasicOrdSeed0.txt";
@@ -116,10 +116,10 @@ namespace E2_CS
 			int nbAttempts = 1;
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				int size = 6;
+				int size = 9;
 				//for (int size = 4; size <= 16; ++size)
                 { 
-                    int nbCols = 10;
+                    int nbCols = 23;
 					//for (int nbCols = 23; nbCols <= 40; ++nbCols)
                     {
 						per.Reset();

@@ -37,11 +37,21 @@ namespace E2_CS
 				((l==p.t || l==-1 || p.t==-1) && (t==p.r || t==-1 || p.r==-1) && (r==p.b || r==-1 || p.b==-1) && (b==p.l || b==-1 || p.l==-1));
 		}
 
-		public int ToMinInt()
+		public int ToMinIntNoUnknowns()
 		{
 			int[] tmp = {t, r, b, l};
 			Array.Sort(tmp);
 			return (((((tmp[0]<<8) | tmp[1])<<8) | tmp[2])<<8) | tmp[3];
+		}
+
+		public int ToInt()
+		{
+			return ((((((t&255)<<8) | (r&255))<<8) | (b&255))<<8) | (l&255);
+		}
+
+		public static int ToInt(int t, int r, int b, int l)
+		{
+			return ((((((t&255)<<8) | (r&255))<<8) | (b&255))<<8) | (l&255);
 		}
 
 		public void Set(int t, int r, int b, int l)

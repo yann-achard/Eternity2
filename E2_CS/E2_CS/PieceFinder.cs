@@ -9,7 +9,64 @@ namespace E2_CS
 {
 	class PieceFinder
 	{
+		private Dictionary<int, List<SpunPiece>> m_dic;
+		private List<SpunPiece> m_empty;
+
+		private void SpinAdd(Piece search, Piece found, int idx)
+		{
+			List<SpunPiece> list;
+			for (int i=0; i<4; ++i)
+			{
+				Piece s = search.Spined(i);
+				Piece f = found.Spined(i);
+				int asInt = s.ToInt();
+				if (m_dic.TryGetValue(asInt, out list) == false)
+				{
+					list = new List<SpunPiece>(1);
+					m_dic.Add(asInt, list);
+				}
+				list.Add(new SpunPiece(f, idx));
+			}
+		}
+
 		public PieceFinder(List<Piece> pieces, int nbPat)
+		{
+			m_empty = new List<SpunPiece>();
+			m_dic = new Dictionary<int,List<SpunPiece>>();
+			int idx = 0;
+			foreach (Piece p in pieces)
+			{
+				SpinAdd(new Piece(p.t, p.r, p.b, p.l), p, idx);
+				SpinAdd(new Piece(p.t, p.r, p.b,  -1), p, idx);
+				SpinAdd(new Piece(p.t, p.r,  -1, p.l), p, idx);
+				SpinAdd(new Piece(p.t, p.r,  -1,  -1), p, idx);
+				SpinAdd(new Piece(p.t,  -1, p.b, p.l), p, idx);
+				SpinAdd(new Piece(p.t,  -1, p.b,  -1), p, idx);
+				SpinAdd(new Piece(p.t,  -1,  -1, p.l), p, idx);
+				SpinAdd(new Piece(p.t,  -1,  -1,  -1), p, idx);
+				SpinAdd(new Piece( -1, p.r, p.b, p.l), p, idx);
+				SpinAdd(new Piece( -1, p.r, p.b,  -1), p, idx);
+				SpinAdd(new Piece( -1, p.r,  -1, p.l), p, idx);
+				SpinAdd(new Piece( -1, p.r,  -1,  -1), p, idx);
+				SpinAdd(new Piece( -1,  -1, p.b, p.l), p, idx);
+				SpinAdd(new Piece( -1,  -1, p.b,  -1), p, idx);
+				SpinAdd(new Piece( -1,  -1,  -1, p.l), p, idx);
+				SpinAdd(new Piece( -1,  -1,  -1,  -1), p, idx);
+				++idx;
+			}
+		}
+
+		public List<SpunPiece> ListAll(int t, int r, int b, int l)
+		{
+			List<SpunPiece> res;
+			return m_dic.TryGetValue(Piece.ToInt(t,r,b,l), out res) ? res : m_empty;
+		}
+
+	}
+
+	class PieceFinderOneAtATime
+	{
+		public PieceFinderOneAtATime(List<Piece> pieces, int nbPat)
 		{
             m_nbPat = nbPat;
             m_pieces = pieces.ToArray();

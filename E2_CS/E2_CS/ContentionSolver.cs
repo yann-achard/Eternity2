@@ -58,6 +58,7 @@ namespace E2_CS
 
 		public bool Solve<Person,Toy>(IDictionary<int, HashSet<int>> hungers, int _nbToys, IDictionary<Person,Toy> solution = null)
 		{
+			bool res = false;
 #if TIMING
 			int nbKids = hungers.Count;
 			int nbToys = _nbToys;
@@ -67,9 +68,8 @@ namespace E2_CS
 				nbHungers += kv.Value.Count;
 			timer.Reset();
 			timer.Start();
-#endif
-			bool res = false;
 			for (int i=0; i<1000; ++i)
+#endif
 				res = DoSolve(hungers, _nbToys, solution);
 			
 #if TIMING

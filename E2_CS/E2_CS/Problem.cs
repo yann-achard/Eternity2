@@ -41,8 +41,8 @@ namespace E2_CS
 			if (wd != p.wd || ht != p.ht || nbPat != p.nbPat || pieces.Count != p.pieces.Count)
 				return false;
 
-			List<int> thisList = pieces.Select(piece => piece.ToMinInt()).ToList();
-			List<int> otherList = p.pieces.Select(piece => piece.ToMinInt()).ToList();
+			List<int> thisList = pieces.Select(piece => piece.ToMinIntNoUnknowns()).ToList();
+			List<int> otherList = p.pieces.Select(piece => piece.ToMinIntNoUnknowns()).ToList();
 			thisList.Sort();
 			otherList.Sort();
 			return thisList.SequenceEqual(otherList); 

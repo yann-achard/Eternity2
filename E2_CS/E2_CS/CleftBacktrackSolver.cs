@@ -38,8 +38,8 @@ namespace E2_CS
 			ContentionSolver contentionSolver = new ContentionSolver(board.size, board.size);
 			PieceFinder finder = new PieceFinder(p.pieces, p.nbPat);
 
-			var spunSet1 = new List<SpunPiece>(board.size);
-			var spunSet2 = new List<SpunPiece>(board.size);
+			List<SpunPiece> spunSet1 = null;
+			List<SpunPiece> spunSet2 = null;
 
 			int nbClefts = board.cleftCount;
 			int nbPieces = board.size;
@@ -56,8 +56,6 @@ namespace E2_CS
 				int cleftIdx = ord.Idx(cleftNumber); //cleftNumber;
 				Board.PieceSide slot1 = board.cleftToPieceMap[cleftIdx][0];
 				Board.PieceSide slot2 = board.cleftToPieceMap[cleftIdx][1];
-				spunSet1.Clear();
-				spunSet2.Clear();
 
 				if (stack.Count > cleftNumber)
 				{
@@ -99,7 +97,7 @@ namespace E2_CS
 					int r = board.GetSide(Side.Right,   slot1.index);
 					int b = board.GetSide(Side.Bottom,  slot1.index);
 					int l = board.GetSide(Side.Left,    slot1.index);
-					finder.ListAll(t, r, b, l, spunSet1);
+					spunSet1 = finder.ListAll(t, r, b, l);
 
 					if (spunSet1.Count > 0)
 					{
@@ -108,7 +106,7 @@ namespace E2_CS
 						r = board.GetSide(Side.Right,   slot2.index);
 						b = board.GetSide(Side.Bottom,  slot2.index);
 						l = board.GetSide(Side.Left,    slot2.index);
-						finder.ListAll(t, r, b, l, spunSet2);
+						spunSet2 = finder.ListAll(t, r, b, l);
 
 						if (spunSet2.Count > 0)
 						{
@@ -127,9 +125,7 @@ namespace E2_CS
 
 							allNeeds.Remove(slot1.index);
 							allNeeds.Remove(slot2.index); 
-							spunSet2.Clear();
 						}
-						spunSet1.Clear();
 					}
 
 					// Try the next color
