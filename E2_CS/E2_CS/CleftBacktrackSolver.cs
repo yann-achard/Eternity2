@@ -40,6 +40,9 @@ namespace E2_CS
 
 			List<SpunPiece> spunSet1 = null;
 			List<SpunPiece> spunSet2 = null;
+			
+			var hs1 = new HashSet<int>();
+			var hs2 = new HashSet<int>();
 
 			int nbClefts = board.cleftCount;
 			int nbPieces = board.size;
@@ -63,8 +66,10 @@ namespace E2_CS
 					se = stack.Pop();
 
 					// Remove the needs for the two slots that the cleft coressponds to
-					allNeeds.Remove(slot1.index);
-					allNeeds.Remove(slot2.index);
+					//allNeeds.Remove(slot1.index);
+					//allNeeds.Remove(slot2.index);
+					contentionSolver.PopInterest(slot2.index);
+					contentionSolver.PopInterest(slot1.index);
 				}
 				else
 				{
@@ -111,20 +116,27 @@ namespace E2_CS
 						if (spunSet2.Count > 0)
 						{
 							// Add the needs of each slot to the list of all the needs
-							allNeeds.Remove(slot1.index);
-							allNeeds.Remove(slot2.index);
-							allNeeds.Add(slot1.index, new HashSet<int>(spunSet1.Select(sp => sp.pieceIndex)));
-							allNeeds.Add(slot2.index, new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex)));
+							//allNeeds.Remove(slot1.index);
+							//allNeeds.Remove(slot2.index);
+
+							hs1 = new HashSet<int>(spunSet1.Select(sp => sp.pieceIndex));
+							hs2 = new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex));
+							contentionSolver.PushInterest(slot1.index, hs1);
+							contentionSolver.PushInterest(slot2.index, hs2);
+							//allNeeds.Add(slot1.index, new HashSet<int>(spunSet1.Select(sp => sp.pieceIndex)));
+							//allNeeds.Add(slot2.index, new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex)));
 
 							Dictionary<int,int> solution = null; //new Dictionary<int,int>();
 							// Check if there's any way all the needs can be met
-							if (contentionSolver.Solve(allNeeds, nbPieces, solution))
+							if (contentionSolver.TrySolve())//contentionSolver.Solve(allNeeds, nbPieces, solution))
 							{
 								break; // We've found a suitable color for the cleft
 							}
 
-							allNeeds.Remove(slot1.index);
-							allNeeds.Remove(slot2.index); 
+							contentionSolver.PopInterest(slot2.index);
+							contentionSolver.PopInterest(slot1.index);
+							//allNeeds.Remove(slot1.index);
+							//allNeeds.Remove(slot2.index); 
 						}
 					}
 

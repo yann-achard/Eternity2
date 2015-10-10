@@ -125,7 +125,7 @@ namespace E2_CS
 						per.Reset();
 						Stopwatch timer = new Stopwatch();
 						timer.Start();
-						for (int attempt=1; attempt<=10; ++attempt)
+						for (int attempt=1; attempt<=1; ++attempt)
 						//while (stabilizer.CriterionMet == false)
 						{
 							//if (timer.Elapsed.TotalMinutes > 6 && attempt > 10) break;
@@ -134,6 +134,7 @@ namespace E2_CS
 							Board b;
 							Problem p = gen.Gen(size, size, nbCols, rng.Next(), out b);
 							{ 
+								b.CopyToClipboard();
 								b.PiecesToClefts();
 								p.pieces.Shuffle(rng);
 								p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
@@ -148,7 +149,7 @@ namespace E2_CS
 
 								Stopwatch watch = new Stopwatch();
 								watch.Start();
-								double iterCount = sol.Solve(p, true, collect/*, b*/);
+								double iterCount = sol.Solve(p, false, collect/*, b*/);
 								watch.Stop();
 								//Console.WriteLine("{0} found {3} in {1} iterations / {2}", sol.Name, iterCount, watch.Elapsed, solutions.Count);
 								if (solutions.Count == 0) {
