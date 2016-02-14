@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace E2_CS
@@ -47,14 +48,20 @@ namespace E2_CS
 			int nbClefts = board.cleftCount;
 			int nbPieces = board.size;
 			int cleftNumber = 0;
+            int[] confidence = new int[nbClefts];
+            confidence.FillWith(-30);
 
 			Stack<StackElem> stack = new Stack<StackElem>(nbClefts);
 			StackElem se = new StackElem();
 			var allNeeds = new Dictionary<int,HashSet<int>>();
 
+            var tmr = new Stopwatch();
+            tmr.Start();
+
 			double iterCount = 0;
 			do {
 				++iterCount;
+                if (tmr.Elapsed.Seconds > 10) break;
 
 				int cleftIdx = ord.Idx(cleftNumber); //cleftNumber;
 				Board.PieceSide slot1 = board.cleftToPieceMap[cleftIdx][0];
@@ -126,12 +133,16 @@ namespace E2_CS
 							//allNeeds.Add(slot1.index, new HashSet<int>(spunSet1.Select(sp => sp.pieceIndex)));
 							//allNeeds.Add(slot2.index, new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex)));
 
+                            //if (confidence[cleftNumber] > 0) break;
+
 							Dictionary<int,int> solution = null; //new Dictionary<int,int>();
 							// Check if there's any way all the needs can be met
 							if (contentionSolver.TrySolve())//contentionSolver.Solve(allNeeds, nbPieces, solution))
 							{
-								break; // We've found a suitable color for the cleft
+                                ++confidence[cleftNumber];
+								break; // There is a way to satisfy those constraints
 							}
+                            --confidence[cleftNumber];
 
 							contentionSolver.PopInterest(slot2.index);
 							contentionSolver.PopInterest(slot1.index);
@@ -168,6 +179,7 @@ namespace E2_CS
 
 			board.CopyToClipboard();
 
+            contentionSolver.WriteStats();
 			return iterCount;
 		}
 	}

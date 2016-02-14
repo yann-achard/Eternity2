@@ -34,6 +34,34 @@ namespace E2_CS
 		int[] nextInterest; // prev: index of alternative hunger or -1
 		int[] interestTarget; // head: which toy is targeted by that hunger
 
+        int[] cSat;
+        int[] cSad;
+
+        public void WriteStats()
+        {
+            Console.WriteLine("Contention stats: y n d");
+            float totSat = 0;
+            float totSad = 0;
+            for (int i=0; i<cSad.Length; ++i)
+            {
+                if (cSad[i] > 0 || cSat[i] > 0)
+                {
+                    totSat += cSat[i];
+                    totSad += cSad[i];
+                    int sum = cSat[i] + cSad[i];
+                    int per = (cSat[i] * 100) / sum;
+                    int nud = per / 5;
+                    string st = new string(' ', nud);
+                    Console.WriteLine("{3}:\t{0}\t{1}\t{2}\t{4}\t{5:000} |{6}|",
+                        cSat[i], cSad[i], cSat[i] - cSad[i], i, sum,
+                        per, st);
+                }
+            }
+            Console.WriteLine("y: {0} n {1} t: {2} p: {3:000.}",
+                totSat, totSad, totSat + totSad, (totSat * 100) / (totSat + totSad));
+            Console.ReadKey(true);
+        }
+
 		public ContentionSolver(int _nbKidMax, int _nbToyMax)
 		{
 			nbKid = 0;
@@ -56,7 +84,10 @@ namespace E2_CS
 			nbInterests = 0;
 			nextInterest = new int[0];
 			interestTarget = new int[0];
-		}
+
+            cSat = new int[nbSetsMax];
+            cSad = new int[nbSetsMax];
+        }
 
 
 #if TIMING
@@ -123,8 +154,8 @@ namespace E2_CS
 			int iEdge = nbInterests;
 			nbInterests += hungers.Count;
 			if (nextInterest.Length < nbInterests) {
-				Array.Resize(ref nextInterest, nbInterests);
-				Array.Resize(ref interestTarget, nbInterests);
+                Array.Resize(ref nextInterest, nbInterests + (nbInterests >> 1));
+                Array.Resize(ref interestTarget, nbInterests + (nbInterests >> 1));
 			}
 			foreach (int toy in hungers) {
 				interestTarget[iEdge] = toy;
@@ -162,6 +193,7 @@ namespace E2_CS
 
 		public bool TrySolve()
 		{
+            ++cSad[nbKid - 1];
 			while (nbMatchesLeft > 0) {
 				Bfs();
 				visited.FillNWith(nbKid, false);
@@ -173,7 +205,9 @@ namespace E2_CS
 					return false;
 				nbMatchesLeft -= batch;
 			}
-			return true;
+            ++cSat[nbKid - 1];
+            --cSad[nbKid - 1];
+            return true;
 		}
 
 		//public bool DoSolve<Person,Toy>(IDictionary<int, HashSet<int>> hungers, int _nbToys, IDictionary<Person,Toy> solution = null)

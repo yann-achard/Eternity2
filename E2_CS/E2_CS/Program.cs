@@ -116,7 +116,7 @@ namespace E2_CS
 			int nbAttempts = 1;
 			//using (StreamWriter sw = new StreamWriter(filename))
 			{
-				int size = 9;
+				int size = 16;
 				//for (int size = 4; size <= 16; ++size)
                 { 
                     int nbCols = 23;
@@ -125,7 +125,7 @@ namespace E2_CS
 						per.Reset();
 						Stopwatch timer = new Stopwatch();
 						timer.Start();
-						for (int attempt=1; attempt<=1; ++attempt)
+						for (int attempt=1; attempt<=10; ++attempt)
 						//while (stabilizer.CriterionMet == false)
 						{
 							//if (timer.Elapsed.TotalMinutes > 6 && attempt > 10) break;
