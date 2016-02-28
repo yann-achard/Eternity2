@@ -103,6 +103,7 @@ namespace E2_CS
 		static void Main(string[] args)
 		{
 
+            Problem truepb = ProblemGenerator.Load("full CW.txt");
 			//ContentionSolver.UnitTest(3,500);
 
 			// Best: 16x16 over 19 colors @ Seed 57 => 4 seonds
@@ -129,10 +130,8 @@ namespace E2_CS
 						//while (stabilizer.CriterionMet == false)
 						{
 							//if (timer.Elapsed.TotalMinutes > 6 && attempt > 10) break;
-							ProblemGenerator gen = new ProblemGenerator();
-
 							Board b;
-							Problem p = gen.Gen(size, size, nbCols, rng.Next(), out b);
+                            Problem p = ProblemGenerator.Gen(size, size, nbCols, rng.Next(), out b);
 							{ 
 								b.CopyToClipboard();
 								b.PiecesToClefts();
