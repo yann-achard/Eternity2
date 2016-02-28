@@ -48,8 +48,6 @@ namespace E2_CS
 			int nbClefts = board.cleftCount;
 			int nbPieces = board.size;
 			int cleftNumber = 0;
-            int[] confidence = new int[nbClefts];
-            confidence.FillWith(-30);
 
 			Stack<StackElem> stack = new Stack<StackElem>(nbClefts);
 			StackElem se = new StackElem();
@@ -71,10 +69,6 @@ namespace E2_CS
 				{
 					// Retrieve the old color
 					se = stack.Pop();
-
-					// Remove the needs for the two slots that the cleft coressponds to
-					//allNeeds.Remove(slot1.index);
-					//allNeeds.Remove(slot2.index);
 					contentionSolver.PopInterest(slot2.index);
 					contentionSolver.PopInterest(slot1.index);
 				}
@@ -122,32 +116,17 @@ namespace E2_CS
 
 						if (spunSet2.Count > 0)
 						{
-							// Add the needs of each slot to the list of all the needs
-							//allNeeds.Remove(slot1.index);
-							//allNeeds.Remove(slot2.index);
-
 							hs1 = new HashSet<int>(spunSet1.Select(sp => sp.pieceIndex));
 							hs2 = new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex));
 							contentionSolver.PushInterest(slot1.index, hs1);
 							contentionSolver.PushInterest(slot2.index, hs2);
-							//allNeeds.Add(slot1.index, new HashSet<int>(spunSet1.Select(sp => sp.pieceIndex)));
-							//allNeeds.Add(slot2.index, new HashSet<int>(spunSet2.Select(sp => sp.pieceIndex)));
 
-                            //if (confidence[cleftNumber] > 0) break;
-
-							Dictionary<int,int> solution = null; //new Dictionary<int,int>();
 							// Check if there's any way all the needs can be met
-							if (contentionSolver.TrySolve())//contentionSolver.Solve(allNeeds, nbPieces, solution))
-							{
-                                ++confidence[cleftNumber];
+							if (contentionSolver.TrySolve())
 								break; // There is a way to satisfy those constraints
-							}
-                            --confidence[cleftNumber];
 
 							contentionSolver.PopInterest(slot2.index);
 							contentionSolver.PopInterest(slot1.index);
-							//allNeeds.Remove(slot1.index);
-							//allNeeds.Remove(slot2.index); 
 						}
 					}
 
@@ -173,7 +152,6 @@ namespace E2_CS
 					// Next we're focusing on the previous cleft
 					--cleftNumber;
 				}
-
 			}
 			while (stack.Count > 0);
 
