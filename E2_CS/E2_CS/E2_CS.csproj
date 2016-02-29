@@ -42,12 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assembler.cs" />
     <Compile Include="BacktrackSolver.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardOrder.cs" />
     <Compile Include="CleftsSnailOrder.cs" />
     <Compile Include="CleftSwapSolver.cs" />
     <Compile Include="CleftBacktrackSolver.cs" />
+    <Compile Include="CompPiece.cs" />
     <Compile Include="ContentionSolver.cs" />
     <Compile Include="Extentions.cs" />
     <Compile Include="GlobalSolver.cs" />

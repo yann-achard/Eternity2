@@ -63,5 +63,63 @@ namespace E2_CS
             pb.pieces = pieces;
             return pb;
         }
-	}
+
+        static public Problem Gen2by2()
+        {
+            //  a  1|1  b
+            //  4  / \  2
+            //-----   -----
+            //  4  \ /  2
+            //  d  3|3  c
+
+            Problem pb = new Problem(2, 2, 5);
+            pb.pieces.Add(new Piece(0, 1, 4, 0));
+            pb.pieces.Add(new Piece(0, 0, 2, 1));
+            pb.pieces.Add(new Piece(2, 0, 0, 3));
+            pb.pieces.Add(new Piece(4, 3, 0, 0));
+            Board b = new Board(pb.wd, pb.ht, pb.nbPat);
+            for (int i = 0; i < pb.pieces.Count; ++i) b.Set(i, pb.pieces[i]);
+            b.CopyToClipboard();
+            return pb;
+        }
+
+        static public Problem Gen4by4()
+        {
+            //     1|1     2|2     3|3     
+            //  4  / \  5  / \  6  / \  7
+            //-----   -----   -----   -----
+            //  4  \ /  5  \ /  6  \ /  7
+            //     8|8     9|9    10|10    
+            // 11  / \ 12  / \ 13  / \ 14
+            //-----   -----   -----   -----
+            // 11  \ / 12  \ / 13  \ / 14
+            //    15|15   16|16   17|17    
+            // 18  / \ 19  / \ 20  / \ 21
+            //-----   -----   -----   -----
+            // 18  \ /  19 \ / 20  \ / 21
+            //    22|22   23|23   24|24    
+
+            Problem pb = new Problem(4, 4, 25);
+            pb.pieces.Add(new Piece(0, 1, 4, 0));
+            pb.pieces.Add(new Piece(0, 2, 5, 1));
+            pb.pieces.Add(new Piece(0, 3, 6, 2));
+            pb.pieces.Add(new Piece(0, 0, 7, 3));
+            pb.pieces.Add(new Piece(4, 8, 11, 0));
+            pb.pieces.Add(new Piece(5, 9, 12, 8));
+            pb.pieces.Add(new Piece(6, 10, 13, 9));
+            pb.pieces.Add(new Piece(7, 0, 14, 10));
+            pb.pieces.Add(new Piece(11, 15, 18, 0));
+            pb.pieces.Add(new Piece(12, 16, 19, 15));
+            pb.pieces.Add(new Piece(13, 17, 20, 16));
+            pb.pieces.Add(new Piece(14, 0, 21, 17));
+            pb.pieces.Add(new Piece(18, 22, 0, 0));
+            pb.pieces.Add(new Piece(19, 23, 0, 22));
+            pb.pieces.Add(new Piece(20, 24, 0, 23));
+            pb.pieces.Add(new Piece(21, 0, 0, 24));
+            Board b = new Board(pb.wd, pb.ht, pb.nbPat);
+            for (int i = 0; i < pb.pieces.Count; ++i) b.Set(i, pb.pieces[i]);
+            b.CopyToClipboard();
+            return pb;
+        }
+    }
 }

@@ -216,7 +216,7 @@ namespace E2_CS
 		public void CopyToClipboard()
 		{
 			StringBuilder sb = new StringBuilder(pieces.Length * 3);
-			for (int y=ht-1; y>=0; --y)
+			for (int y=0; y<ht; ++y)
 			{
 				sb.Append(' ');
 				sb.Append(Get(0,y).ToString());

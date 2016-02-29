@@ -22,12 +22,23 @@ namespace E2_CS
         [STAThread]
 		static void Main(string[] args)
 		{
-            Problem truepb = ProblemGenerator.Load("full CW.txt");
+            int seed = 2;
+            Random rng = new Random(seed);
+
+            Board b;
+            //Problem p = ProblemGenerator.Load("full CW.txt");
+            //Problem p = ProblemGenerator.Gen(4, 4, 8, 0, out b);
+            Problem p = ProblemGenerator.Gen4by4();
+            //p.pieces.Shuffle(rng);
+            //p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
+
+            Assembler ass = new Assembler();
+            ass.Solve(p);
+            Console.ReadKey(true);
+            return;
 
 			// Best: 16x16 over 19 colors @ Seed 57 => 4 seonds
 			// Best: 16x16 over 18 colors @ Seed 4 => 10 seonds
-			int seed = 1;
-			Random rng = new Random(seed);
 			Percentile per = new Percentile();
 			//string filename = @"../../../../TimeFirstSol_CleftBacktrackBasicOrdSeed0.txt";
 			//File.WriteAllText(filename, "Measuring time to first solution using cleft backtracking with vanila ordering\n");
@@ -48,8 +59,7 @@ namespace E2_CS
 						//while (stabilizer.CriterionMet == false)
 						{
 							//if (timer.Elapsed.TotalMinutes > 6 && attempt > 10) break;
-							Board b;
-                            Problem p = ProblemGenerator.Gen(size, size, nbCols, rng.Next(), out b);
+                            p = ProblemGenerator.Gen(size, size, nbCols, rng.Next(), out b);
 							{ 
 								b.CopyToClipboard();
 								b.PiecesToClefts();
