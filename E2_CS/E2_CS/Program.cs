@@ -22,13 +22,13 @@ namespace E2_CS
         [STAThread]
 		static void Main(string[] args)
 		{
-            int seed = 2;
+            int seed = 1;
             Random rng = new Random(seed);
 
             Board b;
-            //Problem p = ProblemGenerator.Load("full CW.txt");
-            //Problem p = ProblemGenerator.Gen(4, 4, 8, 0, out b);
-            Problem p = ProblemGenerator.Gen4by4();
+            Problem p = ProblemGenerator.Load("full CW.txt");
+            //Problem p = ProblemGenerator.Gen(8, 8, 22, rng.Next(), out b);
+            //Problem p = ProblemGenerator.Gen4by4();
             //p.pieces.Shuffle(rng);
             //p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
 

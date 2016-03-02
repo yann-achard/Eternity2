@@ -88,6 +88,10 @@ namespace E2_CS
             sw = new Stopwatch();
             sw.Start();
 
+            float rotSize2 = (float)rotSize * (float)rotSize;
+            float rotSize3 = (float)rotSize * rotSize2;
+            float c4by4totspace = rotSize3 * (float)rotSize;
+            float ic4by4 = 0;
             float c4by4 = 0;
             //List<Piece> rg4by4 = new List<Piece>();
             for (int a = 0; a < rotSize; ++a)
@@ -110,24 +114,30 @@ namespace E2_CS
                                     int cl = rotations2[c].l;
                                     for (int d = 0; d < rotSize; ++d)
                                     {
+                                        ++ic4by4;
                                         if (rotations2[d].r == cl && rotations2[d].t == ab)
                                         {
                                             ++c4by4;
-                                            CompPiece p = new CompPiece(
-                                                rotations2[a].t << 16 | rotations2[b].t,
-                                                rotations2[b].r << 16 | rotations2[c].r,
-                                                rotations2[d].b << 16 | rotations2[c].b,
-                                                rotations2[a].l << 16 | rotations2[d].l,
-                                                new int[] {a, b, d, c}
-                                            );
-                                            p.CopyToClipboard(rotations1, rotations2);
+                                            //CompPiece p = new CompPiece(
+                                            //    rotations2[a].t << 16 | rotations2[b].t,
+                                            //    rotations2[b].r << 16 | rotations2[c].r,
+                                            //    rotations2[d].b << 16 | rotations2[c].b,
+                                            //    rotations2[a].l << 16 | rotations2[d].l,
+                                            //    new int[] {a, b, d, c}
+                                            //);
+                                            //p.CopyToClipboard(rotations1, rotations2);
+                                            if (c4by4 % 1000 == 0)
+                                                Console.WriteLine("c4by4: {0}\t{1}%", c4by4, ic4by4 * 100.0f / c4by4totspace);
                                         }
                                     }
                                 }
+                                else ic4by4 += rotSize;
                             }
                         }
+                        else ic4by4 += rotSize2;
                     }
                 }
+                else ic4by4 += rotSize3;
             }
             sw.Stop();
             Console.WriteLine("secs: " + sw.Elapsed);

@@ -14,7 +14,7 @@ namespace E2_CS
 			Problem p = new Problem(w, h, nbPat);
 
 			b = new Board(w,h,nbPat);
-			HashSet<Piece> set = new HashSet<Piece>();
+			HashSet<int> set = new HashSet<int>();
 			--w;
 			--h;
 			for (int x = 0; x <= w; ++x)
@@ -24,13 +24,18 @@ namespace E2_CS
 					Piece piece = new Piece();
 					piece.l   = (x == 0) ? 0 : b.Get(x-1,y  ).r;
 					piece.b = (y == 0) ? 0 : b.Get(x  ,y-1).t;
-					for (int attempt = 0; attempt < 10; ++attempt)
+					for (int attempt = 0; attempt < 200; ++attempt)
 					{
 						piece.t   = (y == h) ? 0 : rng.Next(1, nbPat);
 						piece.r = (x == w) ? 0 : rng.Next(1, nbPat);
-						if (!set.Contains(piece)) break;
+                        if (!set.Contains(piece.ToMinIntNoUnknowns())) break;
+                        if (attempt == 199)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Some pieces are not unique");
+                            Console.WriteLine("Some pieces are not unique");
+                        }
 					}
-					set.Add(piece);
+                    set.Add(piece.ToMinIntNoUnknowns());
 					b.Set(x,y, piece);
 					p.pieces.Add(piece);
 				}
