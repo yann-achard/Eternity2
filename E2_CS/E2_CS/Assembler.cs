@@ -13,10 +13,10 @@ namespace E2_CS
         Piece[] rotations1;
         CompPiece[] rotations2;
 
-        public void Solve(Problem pb)
+        public void Solve(Problem prob)
         {
             //int size = pb.wd * pb.ht;
-            rotations1 = pb.pieces.SelectMany( p => Enumerable.Range(0,4).Select( r => p.Spined(r) )).ToArray();
+            rotations1 = prob.pieces.SelectMany(p => Enumerable.Range(0, 4).Select(r => p.Spined(r))).ToArray();
             int rotSize = rotations1.Length;
 
             Stopwatch sw = new Stopwatch();
@@ -27,8 +27,22 @@ namespace E2_CS
             // d | c
 
             #region 2 by 2
-            float c2by2 = 0;
+            int c2by2 = 0;
             List<CompPiece> rg2by2 = new List<CompPiece>();
+            Dictionary<int, List<int>>[] perpiece = Enumerable.Range(0, 256).Select(p => new Dictionary<int, List<int>>()).ToArray();
+            Action<int, int, CompPiece> populate = (int p, int idx, CompPiece cp) =>
+            {
+                Dictionary<int, List<int>> dic = perpiece[p];
+                if (!dic.ContainsKey(cp.t)) dic.Add(cp.t, new List<int>());
+                if (!dic.ContainsKey(cp.r)) dic.Add(cp.r, new List<int>());
+                if (!dic.ContainsKey(cp.b)) dic.Add(cp.b, new List<int>());
+                if (!dic.ContainsKey(cp.l)) dic.Add(cp.l, new List<int>());
+                dic[cp.t].Add(idx);
+                dic[cp.r].Add(idx);
+                dic[cp.b].Add(idx);
+                dic[cp.l].Add(idx);
+            };
+
             for (int a = 0; a < rotSize; ++a)
             {
                 int ar = rotations1[a].r;
@@ -57,7 +71,6 @@ namespace E2_CS
                                             && ((rotations1[d].b == 0) == (rotations1[c].b == 0))
                                             && (a >> 2) != (d >> 2) && (d >> 2) != (b >> 2) && (d >> 2) != (c >> 2))
                                         {
-                                            ++c2by2;
                                             CompPiece p = new CompPiece(
                                                 rotations1[a].t << 8 | rotations1[b].t,
                                                 rotations1[b].r << 8 | rotations1[c].r,
@@ -68,6 +81,11 @@ namespace E2_CS
                                                     d, c
                                                 });
                                             rg2by2.Add(p);
+                                            populate(a >> 2, c2by2, p);
+                                            populate(b >> 2, c2by2, p);
+                                            populate(c >> 2, c2by2, p);
+                                            populate(d >> 2, c2by2, p);
+                                            ++c2by2;
                                         }
                                     }
                                 }
@@ -81,68 +99,33 @@ namespace E2_CS
             Console.WriteLine("c2by2: " + c2by2);
             #endregion
 
-            #region 4 by 4
-            rotations2 = rg2by2.ToArray();
-            rotSize = rotations2.Length;
 
-            sw = new Stopwatch();
+            sw.Reset();
             sw.Start();
-
-            float rotSize2 = (float)rotSize * (float)rotSize;
-            float rotSize3 = (float)rotSize * rotSize2;
-            float c4by4totspace = rotSize3 * (float)rotSize;
-            float ic4by4 = 0;
-            float c4by4 = 0;
-            //List<Piece> rg4by4 = new List<Piece>();
-            for (int a = 0; a < rotSize; ++a)
+            float c4by4 = 0.0f;
+            for (int a=0; a<c2by2; ++a)
             {
-                int ar = rotations2[a].r;
-                int ab = rotations2[a].b;
-                if (ab != 0 && ar != 0)
+                CompPiece cpa = rg2by2[a];
+                for (int pb = 0; pb < 256; ++pb)
                 {
-                    for (int b = 0; b < rotSize; ++b)
+                    if (pb == cpa.comp[0] || pb == cpa.comp[1] || pb == cpa.comp[2] || pb == cpa.comp[3]) continue;
+                    if (!perpiece[pb].ContainsKey(cpa.r)) continue;
+                    foreach (int b in perpiece[pb][cpa.r])
                     {
-                        int bl = rotations2[b].l;
-                        int bb = rotations2[b].b;
-                        if (bl == ar && bb != 0)
+                        CompPiece cpb = rg2by2[b];
+                        if (a == cpb.comp[0] || a == cpb.comp[1] || a == cpb.comp[2] || a == cpb.comp[3]) continue;
+                        for (int pc = 0; pc < 256; ++pc)
                         {
-                            for (int c = 0; c < rotSize; ++c)
-                            {
-                                int ct = rotations2[c].t;
-                                if (ct == bb)
-                                {
-                                    int cl = rotations2[c].l;
-                                    for (int d = 0; d < rotSize; ++d)
-                                    {
-                                        ++ic4by4;
-                                        if (rotations2[d].r == cl && rotations2[d].t == ab)
-                                        {
-                                            ++c4by4;
-                                            //CompPiece p = new CompPiece(
-                                            //    rotations2[a].t << 16 | rotations2[b].t,
-                                            //    rotations2[b].r << 16 | rotations2[c].r,
-                                            //    rotations2[d].b << 16 | rotations2[c].b,
-                                            //    rotations2[a].l << 16 | rotations2[d].l,
-                                            //    new int[] {a, b, d, c}
-                                            //);
-                                            //p.CopyToClipboard(rotations1, rotations2);
-                                            if (c4by4 % 1000 == 0)
-                                                Console.WriteLine("c4by4: {0}\t{1}%", c4by4, ic4by4 * 100.0f / c4by4totspace);
-                                        }
-                                    }
-                                }
-                                else ic4by4 += rotSize;
-                            }
+                            if (pc == cpa.comp[0] || pc == cpa.comp[1] || pc == cpa.comp[2] || pc == cpa.comp[3]) continue;
+                            if (pc == cpb.comp[0] || pc == cpb.comp[1] || pc == cpb.comp[2] || pc == cpb.comp[3]) continue;
+
                         }
-                        else ic4by4 += rotSize2;
                     }
                 }
-                else ic4by4 += rotSize3;
             }
             sw.Stop();
             Console.WriteLine("secs: " + sw.Elapsed);
             Console.WriteLine("c4by4: " + c4by4);
-            #endregion
         }
     }
 }
