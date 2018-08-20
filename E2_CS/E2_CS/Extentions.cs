@@ -10,6 +10,21 @@ namespace E2_CS
 
 	static class Extentions
 	{
+        public static void Enqueue<TKey,TVal>(this Dictionary<TKey,List<TVal>> dic, TKey key, TVal v)
+        {
+            List<TVal> list;
+            if (dic.TryGetValue(key, out list))
+            {
+                list.Add(v);
+            }
+            else
+            {
+                list = new List<TVal>(1);
+                list.Add(v);
+                dic.Add(key, list);
+            }
+        }
+
 		public static TSource MinBy<TSource, TKey>(this IEnumerable<TSource> source,
 			Func<TSource, TKey> selector)
 		{

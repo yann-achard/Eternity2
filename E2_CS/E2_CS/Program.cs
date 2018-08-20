@@ -26,13 +26,14 @@ namespace E2_CS
             Random rng = new Random(seed);
 
             Board b;
-            Problem p = ProblemGenerator.Load("full CW.txt");
-            //Problem p = ProblemGenerator.Gen(8, 8, 22, rng.Next(), out b);
+            //Problem p = ProblemGenerator.Load("full CW.txt");
+            Problem p = ProblemGenerator.Gen(2, 2, 4, rng.Next(), out b);
             //Problem p = ProblemGenerator.Gen4by4();
-            //p.pieces.Shuffle(rng);
+            b.CopyToClipboard();
+            p.pieces.Shuffle(rng);
             //p.pieces = p.pieces.ConvertAll(pi => pi.Spined(rng.Next(4)));
 
-            Assembler ass = new Assembler();
+            Combinator ass = new Combinator();
             ass.Solve(p);
             Console.ReadKey(true);
             return;

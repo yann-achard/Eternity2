@@ -181,16 +181,26 @@ namespace E2_CS
             pieceToCleftMap[new PieceSide(idx, Side.Left)] = p.l; 
 		}
 
-		public void Set(int idx, int t, int r, int b, int l)
-		{
-			pieces[idx].Set(t, r, b, l);
-            pieceToCleftMap[new PieceSide(idx, Side.Top)] = t; 
-            pieceToCleftMap[new PieceSide(idx, Side.Right)] = r; 
-            pieceToCleftMap[new PieceSide(idx, Side.Bottom)] = b; 
-            pieceToCleftMap[new PieceSide(idx, Side.Left)] = l; 
-		}
+        public void Set(int idx, int t, int r, int b, int l)
+        {
+            pieces[idx].Set(t, r, b, l);
+            pieceToCleftMap[new PieceSide(idx, Side.Top)] = t;
+            pieceToCleftMap[new PieceSide(idx, Side.Right)] = r;
+            pieceToCleftMap[new PieceSide(idx, Side.Bottom)] = b;
+            pieceToCleftMap[new PieceSide(idx, Side.Left)] = l;
+        }
 
-		public Piece Get(int x, int y)
+        public void Set(int x, int y, int t, int r, int b, int l)
+        {
+            int idx = y * wd + x;
+            pieces[idx].Set(t, r, b, l);
+            pieceToCleftMap[new PieceSide(idx, Side.Top)] = t;
+            pieceToCleftMap[new PieceSide(idx, Side.Right)] = r;
+            pieceToCleftMap[new PieceSide(idx, Side.Bottom)] = b;
+            pieceToCleftMap[new PieceSide(idx, Side.Left)] = l;
+        }
+
+        public Piece Get(int x, int y)
 		{
 			return pieces[y*wd+x];
 		}
@@ -216,7 +226,7 @@ namespace E2_CS
 		public void CopyToClipboard()
 		{
 			StringBuilder sb = new StringBuilder(pieces.Length * 3);
-			for (int y=0; y<ht; ++y)
+			for (int y= ht-1; y>=0; --y)
 			{
 				sb.Append(' ');
 				sb.Append(Get(0,y).ToString());

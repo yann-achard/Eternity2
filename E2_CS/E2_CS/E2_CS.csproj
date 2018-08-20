@@ -49,6 +49,7 @@
     <Compile Include="CleftsSnailOrder.cs" />
     <Compile Include="CleftSwapSolver.cs" />
     <Compile Include="CleftBacktrackSolver.cs" />
+    <Compile Include="Combinator.cs" />
     <Compile Include="CompPiece.cs" />
     <Compile Include="ContentionSolver.cs" />
     <Compile Include="Extentions.cs" />
