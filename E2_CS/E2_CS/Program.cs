@@ -22,12 +22,12 @@ namespace E2_CS
         [STAThread]
 		static void Main(string[] args)
 		{
-            int seed = 1;
+            int seed = 3;
             Random rng = new Random(seed);
 
             Board b;
             //Problem p = ProblemGenerator.Load("full CW.txt");
-            Problem p = ProblemGenerator.Gen(2, 2, 4, rng.Next(), out b);
+            Problem p = ProblemGenerator.Gen(8, 8, 10, rng.Next(), out b);
             //Problem p = ProblemGenerator.Gen4by4();
             b.CopyToClipboard();
             p.pieces.Shuffle(rng);
@@ -35,7 +35,6 @@ namespace E2_CS
 
             Combinator ass = new Combinator();
             ass.Solve(p);
-            Console.ReadKey(true);
             return;
 
 			// Best: 16x16 over 19 colors @ Seed 57 => 4 seonds
